@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://wm881yxtmiiy"]
+
+[ext_resource type="Script" uid="uid://bsr4knfc2d2o4" path="res://scripts/trapwall.gd" id="1_7an3x"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_p4aos"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7an3x"]
+size = Vector3(2, 2, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mko7d"]
+size = Vector3(1.8, 2, 1.8)
+
+[sub_resource type="PrismMesh" id="PrismMesh_7an3x"]
+size = Vector3(1.5, 0.8, 1.5)
+
+[node name="Trapwall" type="StaticBody3D"]
+script = ExtResource("1_7an3x")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("BoxMesh_p4aos")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("BoxShape3D_7an3x")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("BoxShape3D_mko7d")
+
+[node name="Spikes" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
+mesh = SubResource("PrismMesh_7an3x")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
