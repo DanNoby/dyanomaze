@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=3 uid="uid://gbtcxvrrd3e3"]
+
+[ext_resource type="Script" uid="uid://cdr31a4hpuah2" path="res://scenes/hud.gd" id="1_ahhtf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_oo0fn"]
+font_size = 32
+font_color = Color(1, 0.18431373, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_5ysmq"]
+font_size = 64
+outline_size = 1
+
+[node name="HUD" type="CanvasLayer"]
+process_mode = 3
+script = ExtResource("1_ahhtf")
+
+[node name="HealthLabel" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Hearts ♥♥♥"
+label_settings = SubResource("LabelSettings_oo0fn")
+
+[node name="MessageScreen" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="MessageScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="TitleLabel" type="Label" parent="MessageScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -168.0
+offset_top = -44.0
+offset_right = 168.0
+offset_bottom = 44.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "YOU DIED !"
+label_settings = SubResource("LabelSettings_5ysmq")
+
+[node name="RestartButton" type="Button" parent="MessageScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = 57.0
+offset_right = 46.0
+offset_bottom = 88.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "TRY AGAIN "
+
+[connection signal="pressed" from="MessageScreen/RestartButton" to="." method="_on_restart_button_pressed"]

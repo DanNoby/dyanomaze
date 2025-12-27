@@ -53,13 +53,15 @@ func start_trap_cycle():
 func check_for_player_kill():
 	var bodies = kill_zone.get_overlapping_bodies()
 	for body in bodies:
-		if body.name == "Player":
-			die()
+		# Check if the body has the 'hit' function we just wrote
+		if body.has_method("hit"):
+			body.hit()
 
 func die():
 	print("Player Died!")
 	get_tree().reload_current_scene()
 
 func _on_area_3d_body_entered(body):
-	if current_state == DEADLY and body.name == "Player":
-		die()
+	if current_state == DEADLY:
+		if body.has_method("hit"):
+			body.hit()

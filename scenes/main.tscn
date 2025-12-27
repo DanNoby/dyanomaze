@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://bwjgd7tgjtkpa"]
+[gd_scene load_steps=11 format=3 uid="uid://bwjgd7tgjtkpa"]
 
 [ext_resource type="PackedScene" uid="uid://bqlcqcfgrddw1" path="res://scenes/player.tscn" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://wm881yxtmiiy" path="res://scenes/trapwall.tscn" id="2_0wfyh"]
 [ext_resource type="Script" uid="uid://bsstxq4x6bki7" path="res://scenes/maze_container.gd" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://bmivyrra1ojhy" path="res://scenes/finishzone.tscn" id="3_sugp2"]
+[ext_resource type="PackedScene" uid="uid://gbtcxvrrd3e3" path="res://scenes/hud.tscn" id="5_tbgi4"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_sgp6g"]
 size = Vector3(20, 0.5, 21.7)
@@ -289,3 +290,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2014656, 0.53601336, -7.935
 
 [node name="Trapwall81" parent="MazeContainer" instance=ExtResource("2_0wfyh")]
 transform = Transform3D(0.99914664, 0.035730287, -0.020720849, -0.03597506, 0.99928576, -0.0115627, 0.020292902, 0.012298281, 0.9997184, 7.2014656, 0.53601336, -7.9350185)
+
+[node name="HUD" parent="." instance=ExtResource("5_tbgi4")]
