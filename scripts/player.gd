@@ -7,6 +7,7 @@ var is_attacking = false
 @onready var mesh = $Knight
 @onready var sword_hitbox = $Knight/Rig_Medium/Skeleton3D/BoneAttachment3D/sword/swordhitbox
 @onready var anim = $Knight/AnimationPlayer
+
 func _physics_process(delta):
 	# Gravity
 	if not is_on_floor():
@@ -15,40 +16,35 @@ func _physics_process(delta):
 	# --- ATTACK INPUT ---
 	if Input.is_action_just_pressed("ui_accept") and not is_attacking:
 		attack()
+	
+	# --- MOVEMENT (Always active now!) ---
+	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var direction = Vector3(input_dir.x, 0, input_dir.y).normalized()
+	
+	if direction:
+		# 1. MOVE
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
 		
-	# --- STATE MANAGEMENT ---
-	if is_attacking:
-		# Stop moving while attacking so we don't slide
-		velocity.x = 0 
-		velocity.z = 0
-		# We SKIP the movement logic below so animations don't glitch
+		# 2. ROTATE (Visuals)
+		var target_spot = global_position + direction
+		if mesh:
+			mesh.look_at(target_spot, Vector3.UP)
+			mesh.rotate_y(deg_to_rad(180)) 
 		
-	else:
-		# --- STANDARD MOVEMENT (Only if NOT attacking) ---
-		var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-		var direction = Vector3(input_dir.x, 0, input_dir.y).normalized()
-		
-		if direction:
-			# 1. MOVE
-			velocity.x = direction.x * SPEED
-			velocity.z = direction.z * SPEED
-			
-			# 2. ROTATE (Visuals Only)
-			var target_spot = global_position + direction
-			if mesh:
-				mesh.look_at(target_spot, Vector3.UP)
-				mesh.rotate_y(deg_to_rad(180)) # Fix orientation
-			
-			# 3. ANIMATION (Run)
+		# 3. ANIMATION
+		# CRITICAL: Only play Run if we aren't currently swinging the sword.
+		# If we don't check this, the "Run" animation will instantly override the "Attack" animation.
+		if not is_attacking:
 			if anim.current_animation != "Running_A":
 				anim.play("Running_A")
 				
-		else:
-			# Stop moving smoothly
-			velocity.x = move_toward(velocity.x, 0, SPEED)
-			velocity.z = move_toward(velocity.z, 0, SPEED)
-			
-			# Animation (Idle)
+	else:
+		# Stop moving smoothly
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		velocity.z = move_toward(velocity.z, 0, SPEED)
+		
+		if not is_attacking:
 			if anim.current_animation != "Idle_B":
 				anim.play("Idle_B")
 
@@ -62,22 +58,25 @@ func _physics_process(delta):
 func attack():
 	is_attacking = true
 	
-	# Play the animation (Check if your animation is named 'Attack(1H)' or just 'Attack'!)
-	anim.play("Attack(1H)") 
+	# Play the animation
+	anim.play("Interact") 
 	
-	# Timing: Wait for the sword to actually swing forward
-	# (You can tweak these numbers to match the animation speed)
-	await get_tree().create_timer(0.2).timeout
+	# 1. Wind up: Wait for the arm to raise
+	await get_tree().create_timer(0.1).timeout
 	
-	# TURN ON THE KILL ZONE
+	# 2. SWING START: Turn on detection
 	sword_hitbox.monitoring = true
 	
-	# Wait for swing to finish
+	# 3. SWING DURATION: Keep it on for a split second!
+	# (Without this line, it turns off instantly)
 	await get_tree().create_timer(0.3).timeout
 	
-	# TURN OFF THE KILL ZONE
+	# 4. SWING END: Turn off detection
 	sword_hitbox.monitoring = false
 	is_attacking = false
+	
+	# Optional: If you are still holding movement keys, restart run animation immediately
+	# if velocity.length() > 0: anim.play("Running_A")
 
 # --- SIGNAL FROM SWORD HITBOX ---
 # IMPORTANT: Connect the "area_entered" signal from your SwordHitbox to the Player node!
@@ -129,5 +128,10 @@ func die_instant():
 
 
 func _on_swordhitbox_area_entered(area: Area3D) -> void:
-		if area.is_in_group("enemy"):
+	if area == self:
+		return
+	
+	# 2. Check for the enemy tag
+	if area.is_in_group("enemy"):
+		if area.has_method("die"):
 			area.die()

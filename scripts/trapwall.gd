@@ -9,6 +9,9 @@ var start_delay: float = 0.0
 @onready var kill_zone = $Area3D
 @onready var mesh = $MeshInstance3D
 
+var worm_scene = preload("res://scenes/worm.tscn") # Make sure path is right
+var powerup_scene = preload("res://scenes/powerup.tscn") 
+
 enum {SAFE, WARNING, DEADLY}
 var current_state = SAFE
 
@@ -29,6 +32,15 @@ func start_trap_cycle():
 		var tween = create_tween()
 		tween.tween_property(self, "position:y", -3.0, 0.5) # Go down smooth
 		
+		var roll = randf()
+	
+	# 2% Chance for a Worm
+		if roll < 0.02:
+			spawn_worm()
+		
+		if roll > 0.75: 
+			spawn_powerup()
+		
 		# We wait here for the full "Safe Time"
 		await get_tree().create_timer(safe_time).timeout
 		
@@ -44,11 +56,25 @@ func start_trap_cycle():
 		current_state = DEADLY
 		tween = create_tween()
 		tween.tween_property(self, "position:y", 0.0, 0.1) # Snap up fast
-		
+		#if randf() < 0.00:  # Spawning the worms
+			#spawn_worm()
+			
 		check_for_player_kill()
 		
 		# Wall stays up for a bit (Blocking the path)
 		await get_tree().create_timer(deadly_time).timeout
+		
+func spawn_worm():
+	var worm = worm_scene.instantiate()
+	get_tree().current_scene.add_child(worm)
+	worm.global_position = Vector3(global_position.x, 1.0, global_position.z)
+
+# NEW FUNCTION
+func spawn_powerup():
+	var powerup = powerup_scene.instantiate()
+	get_tree().current_scene.add_child(powerup)
+	# Spawn it slightly lower so it sits on the wall top
+	powerup.global_position = global_position + Vector3(0, 1.2, 0)
 
 func check_for_player_kill():
 	var bodies = kill_zone.get_overlapping_bodies()
