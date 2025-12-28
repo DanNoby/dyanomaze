@@ -25,7 +25,6 @@ func _ready():
 func carve_path(walls):
 	# Grid settings
 	var width = 9
-	var height = 9
 	
 	# Start at bottom center (x=4, y=8)
 	var current_x = 4

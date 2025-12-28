@@ -1,9 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://wm881yxtmiiy"]
 
 [ext_resource type="Script" uid="uid://bsr4knfc2d2o4" path="res://scripts/trapwall.gd" id="1_7an3x"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_p4aos"]
-size = Vector3(2, 2, 2)
+[ext_resource type="PackedScene" uid="uid://i11wiq0nvio0" path="res://assets/pillar.fbx" id="2_mko7d"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7an3x"]
 size = Vector3(2, 2, 2)
@@ -17,10 +15,6 @@ size = Vector3(1.5, 0.8, 1.5)
 [node name="Trapwall" type="StaticBody3D"]
 script = ExtResource("1_7an3x")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-mesh = SubResource("BoxMesh_p4aos")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("BoxShape3D_7an3x")
@@ -33,6 +27,10 @@ shape = SubResource("BoxShape3D_mko7d")
 
 [node name="Spikes" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
+visible = false
 mesh = SubResource("PrismMesh_7an3x")
+
+[node name="MeshInstance3D" parent="." instance=ExtResource("2_mko7d")]
+transform = Transform3D(1, 0, 0, 0, 0.6, 0, 0, 0, 1, 0.008160114, 0.018982887, -0.00731802)
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

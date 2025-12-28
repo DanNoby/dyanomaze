@@ -32,5 +32,4 @@ func take_damage():
 	current_hearts -= 1
 	emit_signal("health_changed", current_hearts)
 	
-	if current_hearts <= 0:
-		emit_signal("game_over")
+	# We will let the Player script decide when to trigger Game Over now!

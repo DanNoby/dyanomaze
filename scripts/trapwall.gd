@@ -7,7 +7,7 @@ extends StaticBody3D
 
 var start_delay: float = 0.0
 @onready var kill_zone = $Area3D
-@onready var mesh = $MeshInstance3D # Just in case we need it later
+@onready var mesh = $MeshInstance3D
 
 enum {SAFE, WARNING, DEADLY}
 var current_state = SAFE

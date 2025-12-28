@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwuhm8busurf8"]
+
+[ext_resource type="PackedScene" uid="uid://bq1cjceqn8kvp" path="res://Rig_Medium_MovementBasic.glb" id="1_q6fax"]
+
+[node name="Rig_Medium_MovementBasic" instance=ExtResource("1_q6fax")]
