@@ -1,11 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://blr3ostlr54jt"]
+[gd_scene load_steps=5 format=3 uid="uid://blr3ostlr54jt"]
 
 [ext_resource type="Script" uid="uid://ddqiyvk88cgvo" path="res://scenes/powerup.gd" id="1_ih772"]
 [ext_resource type="PackedScene" uid="uid://d12ufxm2gqj11" path="res://assets/mug_full.gltf" id="2_406cw"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ih772"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ih772"]
+emission_enabled = true
+rim_enabled = true
 
 [node name="PowerUp" type="Area3D"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 script = ExtResource("1_ih772")
 
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.22, 0, 0, 0, 0.22, 0, 0, 0, 0.22, 0, 0, 0)
+shape = SubResource("CylinderShape3D_ih772")
+
 [node name="mug_full2" parent="." instance=ExtResource("2_406cw")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="mug_full" parent="mug_full2" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_ih772")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+
+[editable path="mug_full2"]

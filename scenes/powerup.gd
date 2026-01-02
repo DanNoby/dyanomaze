@@ -1,21 +1,21 @@
 extends Area3D
 
-enum Type { HEALTH, IMMUNITY }
-var my_type = Type.HEALTH
-
+# Visual Float Animation
 func _ready():
-	# Randomly decide type (80% Health, 20% Immunity)
-	if randf() > 0.8:
-		my_type = Type.IMMUNITY
-		# Change color to Blue/Gold
-	else:
-		# Change color to Red
-		pass
+	# Make it bob up and down and spin
+	var tween = create_tween().set_loops()
+	
+	tween.tween_property($mug_full2, "position:y", 0.5, 1.0).as_relative()
+	tween.tween_property($mug_full2, "position:y", -0.5, 1.0).as_relative()
+	
+	var spin_tween = create_tween().set_loops()
+	spin_tween.tween_property($mug_full2, "rotation:y", deg_to_rad(360), 2.0).as_relative()
 
+# Detect Player
 func _on_body_entered(body):
-	if body.name == "Player":
-		if my_type == Type.HEALTH:
-			GameManager.heal_player() # You'll need to add this to Manager
-		else:
-			body.activate_super_immunity() # You'll need to add this to Player
+	if body.is_in_group("player") or body.name == "Player":
+		# 1. Heal
+		GameManager.heal(1)
+		
+		# 2. Delete the mug
 		queue_free()

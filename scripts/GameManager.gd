@@ -32,4 +32,13 @@ func take_damage():
 	current_hearts -= 1
 	emit_signal("health_changed", current_hearts)
 	
-	# We will let the Player script decide when to trigger Game Over now!
+func heal(amount):
+	if current_hearts < max_hearts:
+		current_hearts += amount
+		
+		# Cap it so we don't go over the limit
+		if current_hearts > max_hearts:
+			current_hearts = max_hearts
+			
+		print("Player healed! Current hearts: " + str(current_hearts))
+		emit_signal("health_changed", current_hearts)
