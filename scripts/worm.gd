@@ -1,41 +1,60 @@
 extends Area3D
 
 var target = null
-var speed = 2.0 # Adjust this if they are too fast/slow
+var speed = 2.0 # Adjusted speed
+var flying_height = 2.5 # Height to fly OVER walls (standard walls are usually 2.0 high)
+var is_launching = true # State to prevent moving while popping up
 
 func _ready():
-	# Find the player automatically
 	target = get_tree().get_first_node_in_group("player")
 	
-	# Safety Timer: Kill worm after 10 seconds so they don't pile up forever
+	# --- THE LAUNCH EFFECT ---
+	# 1. Start slightly inside the floor
+	position.y = 0.5 
+	
+	# 2. Create a Tween to animate the "Pop Up"
+	var tween = create_tween()
+	
+	# Animate Y to flying_height over 0.5 seconds with a "Bouncy" effect
+	tween.tween_property(self, "position:y", flying_height, 0.5).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	
+	# 3. Wait for animation to finish before chasing
+	await tween.finished
+	is_launching = false
+	
+	# Safety kill timer
 	await get_tree().create_timer(10.0).timeout
 	queue_free()
 
 func _process(delta):
-	if target:
-		# 1. CALCULATE DIRECTION
-		# We want it to fly at the player, but maybe keep Y level so it doesn't dig into the floor
-		var target_pos = target.global_position
-		target_pos.y += 1.0 # Aim for the player's chest/head
+	# If we are currently launching or have no target, don't move
+	if is_launching or not target:
+		return
 		
-		var direction = (target_pos - global_position).normalized()
-		
-		# 2. MOVE
-		global_position += direction * speed * delta
-		
-		# 3. LOOK AT PLAYER
-		look_at(target_pos, Vector3.UP)
+	# --- CHASE LOGIC ---
+	
+	# 1. Where do we want to go?
+	# We want the Player's X and Z, but NOT their Y (we want to stay flying high)
+	var destination = target.global_position
+	destination.y = flying_height 
+	
+	# 2. Calculate direction
+	var direction = (destination - global_position).normalized()
+	
+	# 3. Move
+	global_position += direction * speed * delta
+	
+	# 4. Look at Player (Visuals)
+	# We look at the actual player position so the worm angles down menacingly
+	look_at(target.global_position, Vector3.UP)
+	#rotate_y(deg_to_rad(180))
 
-# --- DEATH FUNCTION (Called by Sword) ---
+# --- COLLISIONS ---
 func die():
-	# OPTIONAL: Add a particle effect here later!
-	queue_free() # Poof! Gone.
+	queue_free()
 
-# --- ATTACK FUNCTION (Touches Player Body) ---
-# Connect the "body_entered" signal of the Worm Area3D to this function!
 func _on_body_entered(body):
-	if body.name == "Player": # Or use groups: if body.is_in_group("player"):
-		# If the player has a 'hit' function, call it
+	if body.name == "Player": 
 		if body.has_method("hit"):
 			body.hit()
-		queue_free() # Worm dies on impact
+		queue_free()

@@ -14,9 +14,6 @@ var available_tiles: Array[PackedScene] = []
 func _ready():
 	load_tiles_from_folder()
 	
-	# DEBUG: Print what we found so we know it worked
-	print("Found ", available_tiles.size(), " tiles.")
-	
 	if available_tiles.size() > 0:
 		generate_floor()
 

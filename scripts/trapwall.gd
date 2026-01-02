@@ -67,7 +67,7 @@ func start_trap_cycle():
 func spawn_worm():
 	var worm = worm_scene.instantiate()
 	get_tree().current_scene.add_child(worm)
-	worm.global_position = Vector3(global_position.x, 1.0, global_position.z)
+	worm.global_position = Vector3(global_position.x, 0.5, global_position.z)
 
 # NEW FUNCTION
 func spawn_powerup():

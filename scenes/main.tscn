@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://bpnb7r6v6d6go" path="res://scenes/FloorGenerator.gd" id="6_tefeu"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_o5qli"]
-energy_multiplier = 6.0
+energy_multiplier = 0.1
 
 [sub_resource type="Sky" id="Sky_0wfyh"]
 sky_material = SubResource("ProceduralSkyMaterial_o5qli")
@@ -16,6 +16,11 @@ sky_material = SubResource("ProceduralSkyMaterial_o5qli")
 [sub_resource type="Environment" id="Environment_sugp2"]
 background_mode = 2
 sky = SubResource("Sky_0wfyh")
+ambient_light_source = 2
+ambient_light_color = Color(0.10859688, 0.073046185, 0.20438945, 1)
+glow_enabled = true
+glow_intensity = 1.0
+glow_bloom = 0.5
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_o6xl0"]
 
