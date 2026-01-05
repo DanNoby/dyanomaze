@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7rfd0md8wq84"
-path.s3tc="res://.godot/imported/Mage_mage_texture.png-00c2d9b3c8d2547b8cb9e9c7474fde6a.s3tc.ctex"
+uid="uid://dqkhe3rjl0c0s"
+path.s3tc="res://.godot/imported/Ranger_ranger_texture.png-2a6a78cbfed69614c8ba2eb0c34df4e3.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://assets/Mage_mage_texture.png"
-dest_files=["res://.godot/imported/Mage_mage_texture.png-00c2d9b3c8d2547b8cb9e9c7474fde6a.s3tc.ctex"]
+source_file="res://assets/Ranger_ranger_texture.png"
+dest_files=["res://.godot/imported/Ranger_ranger_texture.png-2a6a78cbfed69614c8ba2eb0c34df4e3.s3tc.ctex"]
 
 [params]
 

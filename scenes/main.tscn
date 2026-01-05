@@ -34,6 +34,8 @@ size = Vector2(50, 50)
 
 [node name="Player" parent="." instance=ExtResource("1_o5qli")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.039049, 0.32035363, -9.250142)
+fps_sword_offset = Vector3(-0.1, 1, 1)
+fps_sword_rotation = Vector3(-176.03, 123.63, -56.71)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.807934, 32.047176, 36.168575)

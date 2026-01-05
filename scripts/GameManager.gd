@@ -40,5 +40,4 @@ func heal(amount):
 		if current_hearts > max_hearts:
 			current_hearts = max_hearts
 			
-		print("Player healed! Current hearts: " + str(current_hearts))
 		emit_signal("health_changed", current_hearts)

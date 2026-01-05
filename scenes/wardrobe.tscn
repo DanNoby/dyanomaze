@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bj4gshkwvilvc"]
+
+[ext_resource type="Script" uid="uid://dikhkmawlc5nd" path="res://scenes/wardrobe.gd" id="1_31rhj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c8hr7"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tbqvm"]
+
+[node name="Wardrobe" type="Area3D"]
+script = ExtResource("1_31rhj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+shape = SubResource("BoxShape3D_c8hr7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.08, 0, 0, 0, 1, 0, -1, 0)
+mesh = SubResource("CylinderMesh_tbqvm")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5434167, 0)
+text = "PRESS 'E' TO CHANGE SKIN"

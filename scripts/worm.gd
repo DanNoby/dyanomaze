@@ -1,7 +1,7 @@
 extends Area3D
 
 var target = null
-var speed = 2.0 # Adjusted speed
+var speed = 0    # Adjusted speed
 var flying_height = 2.5 # Height to fly OVER walls (standard walls are usually 2.0 high)
 var is_launching = true # State to prevent moving while popping up
 
