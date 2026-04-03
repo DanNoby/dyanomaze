@@ -88,7 +88,7 @@ func _physics_process(delta):
 		var raw_dir = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 		direction = -raw_dir 
 	else:
-		direction = Vector3(input_dir.x, 0, input_dir.y).normalized()
+		direction = Vector3(-input_dir.x, 0, -input_dir.y).normalized()
 	
 	if direction:
 		velocity.x = direction.x * SPEED

@@ -8292,7 +8292,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_3vyb7")
 
 [node name="CameraTPS" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.34202015, 0.9396926, 0, -0.9396926, 0.34202015, 0, 10, 5)
+transform = Transform3D(-1, 8.2150535e-08, -2.9900352e-08, 0, 0.34202015, 0.9396926, 8.742278e-08, 0.9396926, -0.34202015, 0, 10, -3.1144457)
 
 [node name="Knight" parent="." instance=ExtResource("3_qhqgy")]
 

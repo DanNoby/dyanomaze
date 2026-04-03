@@ -365,6 +365,7 @@ surface_material_override/0 = SubResource("ShaderMaterial_85g3d")
 
 [node name="GPUParticles3D" type="GPUParticles3D" parent="LavaOcean"]
 transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)
+visible = false
 amount = 200
 lifetime = 3.0
 process_material = SubResource("ParticleProcessMaterial_o6xl0")
