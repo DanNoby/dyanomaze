@@ -3,24 +3,22 @@ extends CharacterBody3D
 const SPEED = 5.0
 const MOUSE_SENSITIVITY = 0.003
 
-# Modes 
 var is_fps_mode = false
 var is_invincible = false
 var is_attacking = false
+var shake_intensity: float = 0.0
+var shake_duration: float = 0.0
 
-# Nodes
 @onready var mesh = $Knight
 @onready var sword_container = $Knight/Rig_Medium/Skeleton3D/BoneAttachment3D/sword
 @onready var sword_hitbox = $Knight/Rig_Medium/Skeleton3D/BoneAttachment3D/sword/swordhitbox
 @onready var anim = $Knight/AnimationPlayer
 
-# FPS Setup nodes
 @onready var skeleton = $Knight/Rig_Medium/Skeleton3D
 @onready var head = $Head
 @onready var camera_fps = $Head/CameraFPS
 @onready var camera_tps = $CameraTPS 
 
-# Sword Config
 @export var fps_sword_offset = Vector3(0, 0.5, 0.5)  
 @export var fps_sword_rotation = Vector3(45, 0, 0)
 @export var tps_sword_rot = Vector3.ZERO
@@ -36,25 +34,42 @@ func _input(event):
 		head.rotate_x(event.relative.y * MOUSE_SENSITIVITY) 
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 	
-	# V to change view
 	if Input.is_action_just_pressed("change_view"): 
 		toggle_view_mode()
 
-	# Escape to free mouse
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	
-	# Click to recapture mouse 
 	if Input.is_action_just_pressed("ui_accept"): 
 		if is_fps_mode and GameManager.current_hearts > 0: 
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
+func _process(delta):
+	if shake_duration > 0:
+		shake_duration -= delta
+		var random_x = randf_range(-shake_intensity, shake_intensity)
+		var random_y = randf_range(-shake_intensity, shake_intensity)
+		
+		if is_fps_mode and camera_fps:
+			camera_fps.h_offset = random_x
+			camera_fps.v_offset = random_y
+		elif not is_fps_mode and camera_tps:
+			camera_tps.h_offset = random_x
+			camera_tps.v_offset = random_y
+			
+	elif shake_intensity > 0:
+		shake_intensity = 0.0
+		if camera_fps:
+			camera_fps.h_offset = 0.0
+			camera_fps.v_offset = 0.0
+		if camera_tps:
+			camera_tps.h_offset = 0.0
+			camera_tps.v_offset = 0.0
+
 func _physics_process(delta):
-	# Gravity
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 		
-	# forcing sword pos for tuning to override the AnimationPlayer
 	if is_fps_mode and sword_container:
 		sword_container.position = tps_sword_pos + fps_sword_offset
 		sword_container.rotation_degrees = fps_sword_rotation
@@ -62,28 +77,23 @@ func _physics_process(delta):
 		sword_container.position = tps_sword_pos
 		sword_container.rotation = tps_sword_rot
 		
-	# Attack
 	if Input.is_action_just_pressed("ui_accept") and not is_attacking:
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED or not is_fps_mode:
 			attack()
 	
-	# movement
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var direction = Vector3.ZERO
 	
-	# FPS movement
 	if is_fps_mode:
 		var raw_dir = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 		direction = -raw_dir 
 	else:
-		# Top Down Movement: Absolute directions
 		direction = Vector3(input_dir.x, 0, input_dir.y).normalized()
 	
 	if direction:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 		
-		# Rotate Visuals (Only in Top-Down)
 		if not is_fps_mode and mesh:
 			var target_spot = global_position + direction
 			mesh.look_at(target_spot, Vector3.UP)
@@ -104,10 +114,8 @@ func _physics_process(delta):
 	if global_position.y < -5.0:
 		die_instant()
 
-# Camera helpers
 func toggle_view_mode():
 	if not is_fps_mode: 
-		# Entering FPS: Snap Body to match where Mesh was looking
 		rotation.y = mesh.rotation.y
 		mesh.rotation.y = deg_to_rad(0)
 		
@@ -116,19 +124,16 @@ func toggle_view_mode():
 
 func update_camera_mode():
 	if is_fps_mode:
-		# FPS MODE
 		if camera_tps: camera_tps.current = false
 		if camera_fps: camera_fps.current = true
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		toggle_body_parts(false) 
 	else:
-		# TPS MODE
 		if camera_fps: camera_fps.current = false
 		if camera_tps: camera_tps.current = true
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		toggle_body_parts(true)
 
-# Visibility Looper
 func toggle_body_parts(show_full_body: bool):
 	if not skeleton: return
 	for child in skeleton.get_children():
@@ -139,14 +144,12 @@ func toggle_body_parts(show_full_body: bool):
 				child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 				child.visible = true
 			else:
-				# FPS Mode: Hide Head Only
 				if "Head" in child.name or "Helmet" in child.name:
 					child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
 				else:
 					child.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 					child.visible = true
 
-# Attack func
 func attack():
 	is_attacking = true
 	anim.play("Interact") 
@@ -155,7 +158,6 @@ func attack():
 	sword_hitbox.monitoring = false
 	is_attacking = false
 
-# Health / death
 func hit():
 	if is_invincible: return
 	GameManager.take_damage()
@@ -163,6 +165,11 @@ func hit():
 		die()
 	else:
 		flash_damage()
+		shake_camera(0.2, 0.2)
+
+func shake_camera(intensity: float, duration: float):
+	shake_intensity = intensity
+	shake_duration = duration
 
 func flash_damage():
 	is_invincible = true
@@ -174,7 +181,7 @@ func flash_damage():
 
 func win():
 	set_physics_process(false) 
-	set_process_input(false) # Stops the _input function from snatching the mouse back
+	set_process_input(false)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 func die():
@@ -199,3 +206,4 @@ func _on_swordhitbox_area_entered(area: Area3D) -> void:
 	if area.is_in_group("enemy"):
 		if area.has_method("die"):
 			area.die()
+			shake_camera(0.1, 0.1)
