@@ -201,9 +201,16 @@ func die_instant():
 	GameManager.emit_signal("health_changed", 0)
 	die()
 
+func trigger_hitstop():
+	# Drop game speed to 5%
+	Engine.time_scale = 0.2
+	await get_tree().create_timer(0.3, true, false, true).timeout 
+	Engine.time_scale = 1.0
+	
 func _on_swordhitbox_area_entered(area: Area3D) -> void:
 	if area == self: return 
 	if area.is_in_group("enemy"):
 		if area.has_method("die"):
 			area.die()
 			shake_camera(0.1, 0.1)
+			trigger_hitstop()

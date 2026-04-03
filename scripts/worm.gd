@@ -4,6 +4,7 @@ var target = null
 var speed = 1.5    # Adjusted speed
 var flying_height = 2.5 # Height of flight
 var is_launching = true # State to prevent moving while popping up
+var death_particles = preload("res://scenes/death_particles.tscn") # Adjust path if needed
 
 func _ready():
 	target = get_tree().get_first_node_in_group("player")
@@ -40,6 +41,11 @@ func _process(delta):
 
 # Collisions
 func die():
+	var chunks = death_particles.instantiate()
+	get_tree().current_scene.add_child(chunks)
+	
+	# 2. Move chunks to the enemy's exact position before it dies
+	chunks.global_position = global_position
 	queue_free()
 
 func _on_body_entered(body):

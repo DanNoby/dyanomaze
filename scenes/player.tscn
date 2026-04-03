@@ -8385,7 +8385,7 @@ spot_angle = 20.0
 transform = Transform3D(-1, 0, -8.742278e-08, -2.1335975e-08, 0.9697614, 0.2440551, 8.477923e-08, 0.2440551, -0.9697614, 0, 2.2469697, 0.580168)
 
 [node name="CameraFPS" type="Camera3D" parent="Head"]
-fov = 90.0
+fov = 110.0
 near = 0.1
 
 [connection signal="area_entered" from="Knight/Rig_Medium/Skeleton3D/BoneAttachment3D/sword/swordhitbox" to="." method="_on_swordhitbox_area_entered"]
