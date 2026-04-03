@@ -1,22 +1,32 @@
 extends StaticBody3D
 
-# Trapwall elements
-@export var safe_time: float = 2   # The "Window to Move" (Walls are DOWN)
-@export var warning_time: float = 1.5 # Reaction time (Spikes are PEEKING)
-@export var deadly_time: float = 1.0  # How long it blocks the path (Walls are UP)
+@export var safe_time: float = 2.0   
+@export var warning_time: float = 1.5 
+@export var deadly_time: float = 1.0  
+@export var glow_gradient: Gradient
 
 var start_delay: float = 0.0
 @onready var kill_zone = $Area3D
-@onready var mesh = $MeshInstance3D
+@onready var mesh = $MeshInstance3D/pillar
 
 var worm_scene = preload("res://scenes/worm.tscn") 
 var powerup_scene = preload("res://scenes/powerup.tscn") 
 
 enum {SAFE, WARNING, DEADLY}
 var current_state = SAFE
+var material: StandardMaterial3D 
 
 func _ready():
 	position.y = -3.0 
+	
+	material = mesh.get_active_material(0).duplicate()
+	mesh.set_surface_override_material(0, material)
+	material.emission_enabled = true
+	material.emission_energy_multiplier = 0.0
+
+func set_glow_color(weight: float):
+	if glow_gradient:
+		material.emission = glow_gradient.sample(weight)
 
 func initialize(assigned_delay):
 	start_delay = assigned_delay
@@ -25,39 +35,43 @@ func initialize(assigned_delay):
 
 func start_trap_cycle():
 	while true:
-		# Safe phase
 		current_state = SAFE
 		var tween = create_tween()
-		tween.tween_property(self, "position:y", -3.0, 0.5) # Go down smooth
+		tween.set_parallel(true)
+		tween.tween_property(self, "position:y", -3.0, 0.5) 
+		tween.tween_property(material, "emission_energy_multiplier", 1, 0.2)
+		tween.tween_method(set_glow_color, 1.0, 0.0, 0.5)
 		
 		var roll = randf()
-	
-		# spawn chance for a Worm
 		if roll < 0.02:
 			spawn_worm()
-		
 		if roll > 0.85: 
 			spawn_powerup()
 		
-		# Waiting for the full Safe period
 		await get_tree().create_timer(safe_time).timeout
 		
-		# Spikes peeking phase
+		# --- WARNING PHASE ---
 		current_state = WARNING
 		tween = create_tween()
-		tween.tween_property(self, "position:y", -1.8, 0.2) # Spikes poke out
-		
-		# Give player time to react
+		tween.set_parallel(true) 
+		tween.tween_property(self, "position:y", -1.8, 0.2) 
+		tween.tween_property(material, "emission_energy_multiplier", 4.0, warning_time)
+
+		tween.tween_method(set_glow_color, 0.0, 1.0, 0.2)
+
 		await get_tree().create_timer(warning_time).timeout
 		
-		# Wall up deadly phase
+		# --- DEADLY PHASE ---
 		current_state = DEADLY
 		tween = create_tween()
-		tween.tween_property(self, "position:y", 0.0, 0.1) # Snap up fast
+		tween.set_parallel(true)
+		tween.tween_property(self, "position:y", 0.0, 0.1) 
+
+		# THE FIX: Fade from RED (1.0) back to GREEN (0.0) over the duration it stays up
+		tween.tween_method(set_glow_color, 1.0, 0.0, deadly_time)
 			
 		check_for_player_kill()
-		
-		# walls blocking path
+
 		await get_tree().create_timer(deadly_time).timeout
 		
 func spawn_worm():
@@ -68,18 +82,13 @@ func spawn_worm():
 func spawn_powerup():
 	var powerup = powerup_scene.instantiate()
 	get_tree().current_scene.add_child(powerup)
-	
-	powerup.global_position = global_position + Vector3(0, 1.2, 0)
+	powerup.global_position = Vector3(global_position.x, 0.5, global_position.z)
 
 func check_for_player_kill():
 	var bodies = kill_zone.get_overlapping_bodies()
 	for body in bodies:
 		if body.has_method("hit"):
 			body.hit()
-
-func die():
-	print("Player Died!")
-	get_tree().reload_current_scene()
 
 func _on_area_3d_body_entered(body):
 	if current_state == DEADLY:
