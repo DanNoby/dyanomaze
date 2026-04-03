@@ -45,7 +45,7 @@ func start_trap_cycle():
 		var roll = randf()
 		if roll < 0.02:
 			spawn_worm()
-		if roll > 0.85: 
+		if roll > 0.95: 
 			spawn_powerup()
 		
 		await get_tree().create_timer(safe_time).timeout
@@ -82,7 +82,7 @@ func spawn_worm():
 func spawn_powerup():
 	var powerup = powerup_scene.instantiate()
 	get_tree().current_scene.add_child(powerup)
-	powerup.global_position = Vector3(global_position.x, 0.5, global_position.z)
+	powerup.global_position = Vector3(global_position.x, 2, global_position.z)
 
 func check_for_player_kill():
 	var bodies = kill_zone.get_overlapping_bodies()
