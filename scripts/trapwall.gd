@@ -36,7 +36,7 @@ func start_trap_cycle():
 		if roll < 0.02:
 			spawn_worm()
 		
-		if roll > 0.75: 
+		if roll > 0.85: 
 			spawn_powerup()
 		
 		# Waiting for the full Safe period

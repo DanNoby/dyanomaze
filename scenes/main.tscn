@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bwjgd7tgjtkpa"]
+[gd_scene load_steps=24 format=3 uid="uid://bwjgd7tgjtkpa"]
 
 [ext_resource type="PackedScene" uid="uid://bqlcqcfgrddw1" path="res://scenes/player.tscn" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://wm881yxtmiiy" path="res://scenes/trapwall.tscn" id="2_0wfyh"]
@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bmivyrra1ojhy" path="res://scenes/finishzone.tscn" id="3_sugp2"]
 [ext_resource type="PackedScene" uid="uid://gbtcxvrrd3e3" path="res://scenes/hud.tscn" id="5_tbgi4"]
 [ext_resource type="Script" uid="uid://bpnb7r6v6d6go" path="res://scripts/FloorGenerator.gd" id="6_tefeu"]
-[ext_resource type="Script" uid="uid://d4hpo18la6lef" path="res://scenes/lavaocean.gd" id="7_o6xl0"]
+[ext_resource type="Shader" uid="uid://divl0l370c8i4" path="res://scenes/lava.gdshader" id="7_tipki"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_o5qli"]
 energy_multiplier = 0.1
@@ -32,21 +32,48 @@ albedo_color = Color(0.8784314, 0.54509807, 0.34117648, 1)
 size = Vector2(50, 50)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_tipki"]
+subdivide_width = 150
+subdivide_depth = 150
 
-[sub_resource type="Gradient" id="Gradient_85g3d"]
-colors = PackedColorArray(0, 0, 0, 1, 0.94509804, 0.33333334, 0.08235294, 1)
+[sub_resource type="Gradient" id="Gradient_tipki"]
+colors = PackedColorArray(0, 0, 0, 1, 0.4738974, 0.23779497, 0.06954645, 1)
 
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_choun"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_85g3d"]
+gradient = SubResource("Gradient_tipki")
 
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ya4ey"]
-noise = SubResource("FastNoiseLite_choun")
-color_ramp = SubResource("Gradient_85g3d")
+[sub_resource type="Gradient" id="Gradient_o6xl0"]
+colors = PackedColorArray(0, 0, 0, 1, 0.44047612, 0.24052611, 0.114548214, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eb6dy"]
-albedo_color = Color(0.37139598, 0.092481725, 0.07009227, 1)
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_tipki"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_85g3d"]
+noise = SubResource("FastNoiseLite_tipki")
+color_ramp = SubResource("Gradient_o6xl0")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_85g3d"]
+render_priority = 0
+shader = ExtResource("7_tipki")
+shader_parameter/noise_tex = SubResource("NoiseTexture2D_85g3d")
+shader_parameter/color_ramp = SubResource("GradientTexture1D_85g3d")
+shader_parameter/spike_height = 0.15
+shader_parameter/spike_sharpness = 2.5
+shader_parameter/flow_speed = Vector2(0.05, 0.05)
+shader_parameter/emission_energy = 0.7
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_o6xl0"]
+emission_shape = 3
+emission_box_extents = Vector3(100, 1, 100)
+gravity = Vector3(0, 2, 0)
+turbulence_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tipki"]
 emission_enabled = true
-emission_energy_multiplier = 3.5
-emission_texture = SubResource("NoiseTexture2D_ya4ey")
+emission = Color(0.9536994, 0.5482753, 0.25614268, 1)
+billboard_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_85g3d"]
+material = SubResource("StandardMaterial3D_tipki")
+size = Vector2(0.05, 0.05)
 
 [node name="Main" type="Node3D"]
 
@@ -334,5 +361,11 @@ mesh = SubResource("PlaneMesh_o6xl0")
 [node name="LavaOcean" type="MeshInstance3D" parent="."]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 mesh = SubResource("PlaneMesh_tipki")
-surface_material_override/0 = SubResource("StandardMaterial3D_eb6dy")
-script = ExtResource("7_o6xl0")
+surface_material_override/0 = SubResource("ShaderMaterial_85g3d")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="LavaOcean"]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, 0, 0, 0, 0.01, 0, 0, 0)
+amount = 200
+lifetime = 3.0
+process_material = SubResource("ParticleProcessMaterial_o6xl0")
+draw_pass_1 = SubResource("QuadMesh_85g3d")
