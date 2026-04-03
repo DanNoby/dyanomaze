@@ -1,10 +1,15 @@
 extends Area3D
 
 var target = null
-var speed = 1.5    # Adjusted speed
+var speed = 2.5    # Adjusted speed
 var flying_height = 2.5 # Height of flight
 var is_launching = true # State to prevent moving while popping up
 var death_particles = preload("res://scenes/death_particles.tscn") # Adjust path if needed
+
+var time_passed: float = 0.0
+@export var wave_frequency: float = 2.0 # How fast it weaves
+@export var wave_amplitude: float = 2 # How wide it weaves
+@export var noise_intensity: float = 0.9 # How much random jitter it has
 
 func _ready():
 	target = get_tree().get_first_node_in_group("player")
@@ -26,17 +31,30 @@ func _ready():
 	queue_free()
 
 func _process(delta):
-	# If we are currently launching or have no target, don't move
 	if is_launching or not target:
 		return
-		
-	# Chasing
+
+	# Track time for the sine wave
+	time_passed += delta
+
+	# 1. Get the base forward direction
 	var destination = target.global_position
 	destination.y = flying_height 
-	
-	var direction = (destination - global_position).normalized()
-	global_position += direction * speed * delta
-	
+	var forward_dir = (destination - global_position).normalized()
+
+	# 2. Find the perpendicular axis (Left/Right)
+	var right_dir = forward_dir.cross(Vector3.UP).normalized()
+
+	# 3. Calculate the smooth wave and the chaotic noise
+	var main_wave = sin(time_passed * wave_frequency) * wave_amplitude
+	var noise_wave = sin(time_passed * wave_frequency * 3.7) * noise_intensity
+
+	# 4. Combine them and alter the movement direction
+	var wobble_offset = right_dir * (main_wave + noise_wave)
+	var final_dir = (forward_dir + wobble_offset).normalized()
+
+	# 5. Move and rotate
+	global_position += final_dir * speed * delta
 	look_at(target.global_position, Vector3.UP)
 
 # Collisions
