@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://gbtcxvrrd3e3"]
+[gd_scene load_steps=9 format=3 uid="uid://gbtcxvrrd3e3"]
 
 [ext_resource type="Script" uid="uid://cdr31a4hpuah2" path="res://scripts/hud.gd" id="1_ahhtf"]
 [ext_resource type="FontFile" uid="uid://bnwtnbbagtrpv" path="res://assets/Pixel Game.otf" id="2_5ysmq"]
 [ext_resource type="Script" uid="uid://clid00otdahoh" path="res://scripts/score_label.gd" id="3_6fi6k"]
+[ext_resource type="Shader" uid="uid://c7kqcqf0lpm7" path="res://scripts/hud.gdshader" id="4_6fi6k"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_oo0fn"]
 font_size = 32
@@ -17,6 +18,13 @@ outline_size = 1
 font_size = 50
 outline_size = 10
 outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uo2fv"]
+shader = ExtResource("4_6fi6k")
+shader_parameter/noise_density = 400.0
+shader_parameter/speed = -1.0
+shader_parameter/dust_color = Color(0.85, 0.75, 0.55, 1)
+shader_parameter/opacity = 0.1
 
 [node name="HUD" type="CanvasLayer"]
 process_mode = 3
@@ -98,5 +106,14 @@ text = "Score :"
 label_settings = SubResource("LabelSettings_6fi6k")
 horizontal_alignment = 1
 script = ExtResource("3_6fi6k")
+
+[node name="DustOverlay" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_uo2fv")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [connection signal="pressed" from="MessageScreen/RestartButton" to="." method="_on_restart_button_pressed"]
