@@ -29,9 +29,9 @@ func despawn_routine():
 
 # Detect Player
 func _on_body_entered(body):
-	# Bulletproof check for the player (handles uppercase, lowercase, and node name)
 	if body.is_in_group("Player") or body.is_in_group("player") or body.name == "Player":
 		GameManager.heal(1) # Heal
-		
-		queue_free()
 		get_tree().call_group("ScoreUI", "add_score", 5, true, Color(0,1,0))
+		if body.has_method("powerup_flash"):
+			body.powerup_flash()
+		queue_free()

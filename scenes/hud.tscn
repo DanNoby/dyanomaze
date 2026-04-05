@@ -29,7 +29,7 @@ theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_fonts/font = ExtResource("2_5ysmq")
 theme_override_font_sizes/font_size = 16
-text = "Hearts ♥♥♥"
+text = "HP ♥♥♥"
 label_settings = SubResource("LabelSettings_oo0fn")
 
 [node name="MessageScreen" type="Control" parent="."]

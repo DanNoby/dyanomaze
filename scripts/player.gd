@@ -178,6 +178,47 @@ func flash_damage():
 		await get_tree().create_timer(0.1).timeout
 	if mesh: mesh.visible = true
 	is_invincible = false
+	
+func powerup_flash():
+	if not mesh: 
+		return
+
+	var flash_mat = StandardMaterial3D.new()
+	flash_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	flash_mat.albedo_color = Color(1, 1, 1, 1) 
+	flash_mat.emission_enabled = true
+	flash_mat.emission = Color(1, 1, 1) 
+	flash_mat.emission_energy_multiplier = 4.0 
+
+	# 1. Paint the material on every mesh inside the Knight
+	apply_flash_to_meshes(mesh, flash_mat)
+
+	var tween = create_tween()
+	tween.tween_property(flash_mat, "albedo_color:a", 0.0, 0.2)
+	tween.parallel().tween_property(flash_mat, "emission_energy_multiplier", 0.0, 0.2)
+
+	# 2. Strip the material off when the tween finishes
+	tween.tween_callback(func(): remove_flash_from_meshes(mesh))
+
+# --- HELPER FUNCTIONS ---
+
+func apply_flash_to_meshes(node: Node, mat: Material):
+	# If this specific piece is a mesh, paint it!
+	if node is MeshInstance3D:
+		node.material_overlay = mat
+		
+	# Keep digging deeper into the children
+	for child in node.get_children():
+		apply_flash_to_meshes(child, mat)
+
+func remove_flash_from_meshes(node: Node):
+	# If this specific piece is a mesh, clean it!
+	if node is MeshInstance3D:
+		node.material_overlay = null
+		
+	# Keep digging deeper into the children
+	for child in node.get_children():
+		remove_flash_from_meshes(child)
 
 func win():
 	set_physics_process(false) 
