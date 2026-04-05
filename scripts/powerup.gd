@@ -34,3 +34,4 @@ func _on_body_entered(body):
 		GameManager.heal(1) # Heal
 		
 		queue_free()
+		get_tree().call_group("ScoreUI", "add_score", 5, true, Color(0,1,0))

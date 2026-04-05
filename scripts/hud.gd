@@ -17,7 +17,7 @@ func _ready():
 
 # Updates the text when we get hit
 func update_heart_display(amount):
-	var txt = "Hearts: "
+	var txt = " HP "
 	for i in range(amount):
 		txt += "♥ "
 	health_label.text = txt

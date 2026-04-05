@@ -214,3 +214,5 @@ func _on_swordhitbox_area_entered(area: Area3D) -> void:
 			area.die()
 			shake_camera(0.1, 0.1)
 			trigger_hitstop()
+			
+			get_tree().call_group("ScoreUI", "add_score", 10, true, Color(1,1,0))

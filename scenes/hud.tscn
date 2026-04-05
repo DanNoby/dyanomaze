@@ -1,14 +1,22 @@
-[gd_scene load_steps=4 format=3 uid="uid://gbtcxvrrd3e3"]
+[gd_scene load_steps=7 format=3 uid="uid://gbtcxvrrd3e3"]
 
 [ext_resource type="Script" uid="uid://cdr31a4hpuah2" path="res://scripts/hud.gd" id="1_ahhtf"]
+[ext_resource type="FontFile" uid="uid://bnwtnbbagtrpv" path="res://assets/Pixel Game.otf" id="2_5ysmq"]
+[ext_resource type="Script" uid="uid://clid00otdahoh" path="res://scripts/score_label.gd" id="3_6fi6k"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_oo0fn"]
 font_size = 32
 font_color = Color(1, 0.18431373, 0, 1)
+outline_size = 10
 
 [sub_resource type="LabelSettings" id="LabelSettings_5ysmq"]
 font_size = 64
 outline_size = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_6fi6k"]
+font_size = 50
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
 
 [node name="HUD" type="CanvasLayer"]
 process_mode = 3
@@ -17,6 +25,10 @@ script = ExtResource("1_ahhtf")
 [node name="HealthLabel" type="Label" parent="."]
 offset_right = 40.0
 offset_bottom = 23.0
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("2_5ysmq")
+theme_override_font_sizes/font_size = 16
 text = "Hearts ♥♥♥"
 label_settings = SubResource("LabelSettings_oo0fn")
 
@@ -68,5 +80,23 @@ offset_bottom = 88.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "TRY AGAIN "
+
+[node name="ScoreLabel" type="Label" parent="." groups=["ScoreUI"]]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("2_5ysmq")
+theme_override_font_sizes/font_size = 64
+text = "Score :"
+label_settings = SubResource("LabelSettings_6fi6k")
+horizontal_alignment = 1
+script = ExtResource("3_6fi6k")
 
 [connection signal="pressed" from="MessageScreen/RestartButton" to="." method="_on_restart_button_pressed"]
