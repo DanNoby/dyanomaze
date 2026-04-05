@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bwjgd7tgjtkpa"]
+[gd_scene load_steps=25 format=3 uid="uid://bwjgd7tgjtkpa"]
 
 [ext_resource type="PackedScene" uid="uid://bqlcqcfgrddw1" path="res://scenes/player.tscn" id="1_o5qli"]
 [ext_resource type="PackedScene" uid="uid://wm881yxtmiiy" path="res://scenes/trapwall.tscn" id="2_0wfyh"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://gbtcxvrrd3e3" path="res://scenes/hud.tscn" id="5_tbgi4"]
 [ext_resource type="Script" uid="uid://bpnb7r6v6d6go" path="res://scripts/FloorGenerator.gd" id="6_tefeu"]
 [ext_resource type="Shader" uid="uid://divl0l370c8i4" path="res://scripts/lava.gdshader" id="7_tipki"]
+[ext_resource type="AudioStream" uid="uid://cn6850bqhtdvx" path="res://assets/sounds/sandstorm.ogg" id="8_tipki"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_o5qli"]
 energy_multiplier = 0.1
@@ -371,3 +372,8 @@ amount = 200
 lifetime = 3.0
 process_material = SubResource("ParticleProcessMaterial_o6xl0")
 draw_pass_1 = SubResource("QuadMesh_85g3d")
+
+[node name="BGM" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("8_tipki")
+volume_db = -10.0
+autoplay = true

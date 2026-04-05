@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bmivyrra1ojhy"]
+[gd_scene load_steps=5 format=3 uid="uid://bmivyrra1ojhy"]
 
 [ext_resource type="Script" uid="uid://7d7xgj0jtrah" path="res://scripts/finish_zone.gd" id="1_26jv3"]
 [ext_resource type="PackedScene" uid="uid://bgysuei8c1j78" path="res://assets/pillar_decorated.gltf" id="2_vnk2v"]
+[ext_resource type="AudioStream" uid="uid://cilpcqx7mgef6" path="res://assets/sounds/switch.wav" id="3_33qj3"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_26jv3"]
 
@@ -13,3 +14,6 @@ shape = SubResource("CylinderShape3D_26jv3")
 
 [node name="pillar_decorated2" parent="." instance=ExtResource("2_vnk2v")]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, -1, 0)
+
+[node name="SwitchAudio" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_33qj3")

@@ -154,6 +154,10 @@ func attack():
 	is_attacking = true
 	anim.play("Interact") 
 	sword_hitbox.monitoring = true 
+	
+	$SwordAudio.pitch_scale = randf_range(0.8, 1.2)
+	$SwordAudio.play()
+	
 	await get_tree().create_timer(0.4).timeout
 	sword_hitbox.monitoring = false
 	is_attacking = false
@@ -161,6 +165,8 @@ func attack():
 func hit():
 	if is_invincible: return
 	GameManager.take_damage()
+	$GettingHit.play()
+	
 	if GameManager.current_hearts <= 0:
 		die()
 	else:
@@ -182,7 +188,8 @@ func flash_damage():
 func powerup_flash():
 	if not mesh: 
 		return
-
+	
+	$PowerupAudio.play()
 	var flash_mat = StandardMaterial3D.new()
 	flash_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	flash_mat.albedo_color = Color(1, 1, 1, 1) 
@@ -200,7 +207,7 @@ func powerup_flash():
 	# 2. Strip the material off when the tween finishes
 	tween.tween_callback(func(): remove_flash_from_meshes(mesh))
 
-# --- HELPER FUNCTIONS ---
+# --- HELPER FUNCTIONS ---ds
 
 func apply_flash_to_meshes(node: Node, mat: Material):
 	# If this specific piece is a mesh, paint it!

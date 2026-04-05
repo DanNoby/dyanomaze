@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://btjl1d5w03xf4"]
+[gd_scene load_steps=6 format=3 uid="uid://btjl1d5w03xf4"]
 
 [ext_resource type="Script" uid="uid://cb1lh5kkp3r8c" path="res://scripts/worm.gd" id="1_fb06d"]
 [ext_resource type="PackedScene" uid="uid://bqyjeqjktrgya" path="res://assets/Skeleton_Minion.glb" id="2_lley5"]
+[ext_resource type="AudioStream" uid="uid://dj3xttlew3fbh" path="res://assets/sounds/enemyhoming.ogg" id="3_lley5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fb06d"]
 transparency = 1
@@ -47,6 +48,12 @@ surface_material_override/0 = SubResource("StandardMaterial3D_fb06d")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 1, 0)
 shape = SubResource("SphereShape3D_ttset")
+
+[node name="HomingEnemy" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_lley5")
+volume_db = 2.0
+autoplay = true
+max_distance = 30.0
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 

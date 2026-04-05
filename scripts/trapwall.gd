@@ -58,6 +58,7 @@ func start_trap_cycle():
 		tween.tween_property(material, "emission_energy_multiplier", 4.0, warning_time)
 
 		tween.tween_method(set_glow_color, 0.0, 1.0, 0.2)
+		$AudioWarning.play()
 
 		await get_tree().create_timer(warning_time).timeout
 		
@@ -69,6 +70,7 @@ func start_trap_cycle():
 
 		# THE FIX: Fade from RED (1.0) back to GREEN (0.0) over the duration it stays up
 		tween.tween_method(set_glow_color, 1.0, 0.0, deadly_time)
+		$AudioStrike.play()
 			
 		check_for_player_kill()
 

@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://wm881yxtmiiy"]
+[gd_scene load_steps=9 format=3 uid="uid://wm881yxtmiiy"]
 
 [ext_resource type="Script" uid="uid://bsr4knfc2d2o4" path="res://scripts/trapwall.gd" id="1_7an3x"]
 [ext_resource type="PackedScene" uid="uid://i11wiq0nvio0" path="res://assets/pillar.fbx" id="2_mko7d"]
+[ext_resource type="AudioStream" uid="uid://dmwn3j7lvadai" path="res://assets/sounds/spikesloading.wav" id="3_d5ce2"]
+[ext_resource type="AudioStream" uid="uid://c7mcr8bvpue1d" path="res://assets/sounds/spikestrike.wav" id="4_iwpgt"]
 
 [sub_resource type="Gradient" id="Gradient_mko7d"]
 offsets = PackedFloat32Array(0.5588235, 1)
@@ -37,5 +39,15 @@ mesh = SubResource("PrismMesh_7an3x")
 
 [node name="MeshInstance3D" parent="." instance=ExtResource("2_mko7d")]
 transform = Transform3D(0.75, 0, 0, 0, 0.6, 0, 0, 0, 0.75, 0.008160114, 0.018982887, -0.00731802)
+
+[node name="AudioWarning" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_d5ce2")
+volume_db = -10.0
+max_distance = 30.0
+
+[node name="AudioStrike" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_iwpgt")
+volume_db = -5.0
+max_distance = 30.0
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
