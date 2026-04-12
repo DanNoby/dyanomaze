@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bngfdemip6riv"
-path="res://.godot/imported/Pixel Game.otf-37228270d91e5a4f4ebc278dd7305321.fontdata"
+uid="uid://b4jy4720bv8fu"
+path="res://.godot/imported/titlefont.ttf-6ce0ee937adf857ec4557e4df05f1db9.fontdata"
 
 [deps]
 
-source_file="res://scripts/Pixel Game.otf"
-dest_files=["res://.godot/imported/Pixel Game.otf-37228270d91e5a4f4ebc278dd7305321.fontdata"]
+source_file="res://assets/fonts/titlefont.ttf"
+dest_files=["res://.godot/imported/titlefont.ttf-6ce0ee937adf857ec4557e4df05f1db9.fontdata"]
 
 [params]
 
