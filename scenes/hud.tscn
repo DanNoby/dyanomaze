@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://gbtcxvrrd3e3"]
+[gd_scene load_steps=13 format=3 uid="uid://gbtcxvrrd3e3"]
 
 [ext_resource type="Script" uid="uid://cdr31a4hpuah2" path="res://scripts/hud.gd" id="1_ahhtf"]
 [ext_resource type="FontFile" uid="uid://bnwtnbbagtrpv" path="res://assets/Pixel Game.otf" id="2_5ysmq"]
@@ -29,6 +29,10 @@ shader_parameter/opacity = 0.1
 [sub_resource type="ButtonGroup" id="ButtonGroup_6fi6k"]
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_uo2fv"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_047uy"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_5pdws"]
 
 [node name="HUD" type="CanvasLayer"]
 process_mode = 3
@@ -153,11 +157,16 @@ stretch_mode = 5
 custom_minimum_size = Vector2(350, 210)
 layout_mode = 2
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 
 [node name="Video" type="VBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
+
+[node name="HUDToggle" type="CheckButton" parent="PauseMenu/VBoxContainer/TabContainer/Video"]
+layout_mode = 2
+text = "SHOW HUD"
 
 [node name="FullScreenToggle" type="CheckButton" parent="PauseMenu/VBoxContainer/TabContainer/Video"]
 layout_mode = 2
@@ -178,7 +187,6 @@ layout_mode = 2
 text = "SCREEN SHAKE"
 
 [node name="Audio" type="VBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -203,6 +211,17 @@ text = "SFX VOLUME"
 [node name="SFXSlider" type="HSlider" parent="PauseMenu/VBoxContainer/TabContainer/Audio"]
 layout_mode = 2
 
+[node name="OutputContainer" type="HBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer/Audio"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Audio/OutputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Output Device"
+
+[node name="OutputDropdown" type="OptionButton" parent="PauseMenu/VBoxContainer/TabContainer/Audio/OutputContainer"]
+layout_mode = 2
+
 [node name="Gameplay" type="VBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
@@ -223,6 +242,22 @@ layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_uo2fv")
 text = "FPS"
+
+[node name="InputToggles" type="HBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay"]
+layout_mode = 2
+alignment = 1
+
+[node name="KeyboardButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay/InputToggles"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_047uy")
+text = "Keyboard"
+
+[node name="ControllerButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay/InputToggles"]
+layout_mode = 2
+toggle_mode = true
+button_group = SubResource("ButtonGroup_5pdws")
+text = "Controller"
 
 [node name="SensLabel" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay"]
 layout_mode = 2

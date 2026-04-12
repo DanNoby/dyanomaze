@@ -11,13 +11,17 @@ extends CanvasLayer
 @onready var fullscreen_toggle = $PauseMenu/VBoxContainer/TabContainer/Video/FullScreenToggle
 @onready var fov_slider = $PauseMenu/VBoxContainer/TabContainer/Video/FOVSlider
 @onready var shake_toggle = $PauseMenu/VBoxContainer/TabContainer/Video/ShakeToggle
+@onready var hud_toggle = $PauseMenu/VBoxContainer/TabContainer/Video/HUDToggle
 
+@onready var output_dropdown = $PauseMenu/VBoxContainer/TabContainer/Audio/OutputContainer/OutputDropdown
 @onready var master_slider = $PauseMenu/VBoxContainer/TabContainer/Audio/MasterSlider
 @onready var music_slider = $PauseMenu/VBoxContainer/TabContainer/Audio/MusicSlider
 @onready var sfx_slider = $PauseMenu/VBoxContainer/TabContainer/Audio/SFXSlider
 
 @onready var tps_button = $PauseMenu/VBoxContainer/TabContainer/Gameplay/CameraToggles/TPSButton
 @onready var fps_button = $PauseMenu/VBoxContainer/TabContainer/Gameplay/CameraToggles/FPSButton
+@onready var keyboard_btn = $PauseMenu/VBoxContainer/TabContainer/Gameplay/InputToggles/KeyboardButton
+@onready var controller_btn = $PauseMenu/VBoxContainer/TabContainer/Gameplay/InputToggles/ControllerButton
 @onready var invert_toggle = $PauseMenu/VBoxContainer/TabContainer/Gameplay/InvertToggle
 @onready var sens_slider = $PauseMenu/VBoxContainer/TabContainer/Gameplay/SensSlider
 
@@ -31,6 +35,9 @@ extends CanvasLayer
 @onready var resume_button = $PauseMenu/VBoxContainer/ResumeButton
 @onready var quit_button = $PauseMenu/VBoxContainer/QuitButton
 
+@onready var score_ui = $ScoreLabel
+@onready var health_ui = $HealthLabel
+
 var is_remapping: bool = false
 var action_to_remap: String = ""
 var button_to_update: Button = null
@@ -38,6 +45,9 @@ var button_to_update: Button = null
 func _ready():
 	# Initial Visibility
 	quit_button.pressed.connect(quit_game)
+	hud_toggle.button_pressed = GlobalSettings.show_hud
+	if score_ui: score_ui.visible = GlobalSettings.show_hud
+	if health_ui: health_ui.visible = GlobalSettings.show_hud
 	message_screen.visible = false
 	pause_menu.visible = false
 	remap_overlay.visible = false
@@ -53,11 +63,17 @@ func _ready():
 	GameManager.health_changed.connect(update_heart_display)
 	GameManager.game_over.connect(show_game_over)
 	GameManager.level_complete.connect(show_win)
+	hud_toggle.toggled.connect(_on_hud_toggled)
 	
 	if GlobalSettings.prefer_fps:
 		fps_button.button_pressed = true
 	else:
 		tps_button.button_pressed = true
+	
+	if GlobalSettings.use_controller:
+		controller_btn.button_pressed = true
+	else:
+		keyboard_btn.button_pressed = true
 	
 	master_slider.max_value = 1.0
 	master_slider.step = 0.05
@@ -89,6 +105,9 @@ func _ready():
 	sens_slider.value_changed.connect(_on_sens_changed)
 	fov_slider.value_changed.connect(_on_fov_changed)
 	shake_toggle.toggled.connect(_on_shake_toggled)
+	keyboard_btn.toggled.connect(_on_keyboard_toggled)
+	controller_btn.toggled.connect(_on_controller_toggled)
+	output_dropdown.item_selected.connect(_on_output_selected)
 	
 	up_button.pressed.connect(_on_remap_button_pressed.bind("ui_up", up_button))
 	down_button.pressed.connect(_on_remap_button_pressed.bind("ui_down", down_button))
@@ -116,7 +135,6 @@ func _input(event):
 							button_to_update.text = "Taken!"
 							await get_tree().create_timer(0.8).timeout
 
-							# Revert the button text back to what it was
 							update_button_text(button_to_update, action_to_remap) 
 
 							is_remapping = false
@@ -126,7 +144,9 @@ func _input(event):
 			
 			var new_event = InputEventKey.new()
 			new_event.physical_keycode = keycode
-			InputMap.action_erase_events(action_to_remap)
+			for e in InputMap.action_get_events(action_to_remap):
+				if e is InputEventKey:
+					InputMap.action_erase_event(action_to_remap, e)
 			InputMap.action_add_event(action_to_remap, new_event)
 
 			GlobalSettings.keybinds[action_to_remap] = keycode
@@ -140,7 +160,7 @@ func _input(event):
 			get_viewport().set_input_as_handled()
 		return
 
-	if event.is_action_pressed("ui_cancel"):
+	if event.is_action_pressed("toggle_pause"):
 		if message_screen.visible:
 			return
 			
@@ -152,7 +172,9 @@ func _input(event):
 func pause_game():
 	pause_menu.visible = true
 	get_tree().paused = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE # Unlock mouse
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	$PauseMenu/VBoxContainer/ResumeButton.grab_focus()
+	update_audio_dropdown()
 
 func resume_game():
 	pause_menu.visible = false
@@ -161,7 +183,7 @@ func resume_game():
 
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-# --- SETTINGS LOGIC ---
+# Settings logic
 func _on_master_changed(value: float):
 	GlobalSettings.master_vol = value
 	GlobalSettings.apply_settings()
@@ -228,6 +250,47 @@ func _on_sfx_changed(value: float):
 func _on_invert_toggled(toggled_on: bool):
 	GlobalSettings.invert_y = toggled_on
 	GlobalSettings.save_settings()
+	
+func _on_keyboard_toggled(toggled_on: bool):
+	if toggled_on:
+		GlobalSettings.use_controller = false
+		GlobalSettings.save_settings()
+
+func _on_controller_toggled(toggled_on: bool):
+	if toggled_on:
+		GlobalSettings.use_controller = true
+		GlobalSettings.save_settings()
+		
+func _on_hud_toggled(toggled_on: bool):
+	GlobalSettings.show_hud = toggled_on
+	GlobalSettings.save_settings()
+
+	# Hide/Show just these specific pieces in real-time
+	if score_ui: score_ui.visible = toggled_on
+	if health_ui: health_ui.visible = toggled_on
+
+func _on_output_selected(index: int):
+	# Get the exact name of the device they just clicked
+	var selected_device = output_dropdown.get_item_text(index)
+	
+	GlobalSettings.audio_device = selected_device
+	GlobalSettings.save_settings()
+	GlobalSettings.apply_settings()
+	
+func update_audio_dropdown():
+	output_dropdown.clear()
+	var devices = AudioServer.get_output_device_list()
+
+	# Mac Failsafe: If the OS hides the list and returns nothing, force a "Default" option
+	if devices.is_empty():
+		devices.append("Default")
+
+	for i in range(devices.size()):
+		output_dropdown.add_item(devices[i])
+		
+		# Re-select the player's saved preference
+		if devices[i] == GlobalSettings.audio_device:
+			output_dropdown.select(i)
 	
 func update_heart_display(amount):
 	var txt = " HP "
