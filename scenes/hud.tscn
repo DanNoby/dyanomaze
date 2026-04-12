@@ -1,9 +1,10 @@
-[gd_scene load_steps=23 format=3 uid="uid://gbtcxvrrd3e3"]
+[gd_scene load_steps=25 format=3 uid="uid://gbtcxvrrd3e3"]
 
 [ext_resource type="Script" uid="uid://cdr31a4hpuah2" path="res://scripts/hud.gd" id="1_ahhtf"]
 [ext_resource type="FontFile" uid="uid://bnwtnbbagtrpv" path="res://assets/Pixel Game.otf" id="2_5ysmq"]
 [ext_resource type="Script" uid="uid://clid00otdahoh" path="res://scripts/score_label.gd" id="3_6fi6k"]
 [ext_resource type="Shader" uid="uid://c7kqcqf0lpm7" path="res://scripts/hud.gdshader" id="4_6fi6k"]
+[ext_resource type="Shader" uid="uid://c6412nhvdo5lr" path="res://scripts/TVstatic.gdshader" id="5_0i1j5"]
 [ext_resource type="FontFile" uid="uid://bngfdemip6riv" path="res://assets/fonts/Pixel Game.otf" id="5_5pdws"]
 [ext_resource type="Shader" uid="uid://cyfnlm3a56v3q" path="res://scripts/titletext.gdshader" id="5_047uy"]
 [ext_resource type="FontFile" uid="uid://b4jy4720bv8fu" path="res://assets/fonts/titlefont.ttf" id="5_uo2fv"]
@@ -29,6 +30,12 @@ shader_parameter/noise_density = 400.0
 shader_parameter/speed = -1.0
 shader_parameter/dust_color = Color(0.85, 0.75, 0.55, 1)
 shader_parameter/opacity = 0.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mphia"]
+shader = ExtResource("5_0i1j5")
+shader_parameter/static_intensity = 1.0
+shader_parameter/scanline_intensity = 0.0130000006175
+shader_parameter/vignette_scale = 1.190000056525
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hd3ao"]
 shader = ExtResource("6_hd3ao")
@@ -64,15 +71,19 @@ border_color = Color(0.8083506, 0, 0, 1)
 default_font = ExtResource("5_5pdws")
 default_font_size = 24
 Button/colors/font_color = Color(0.88, 0, 0, 1)
+Button/constants/outline_size = 2
 Button/styles/focus = null
 Button/styles/hover = SubResource("StyleBoxFlat_hd3ao")
 Button/styles/normal = SubResource("StyleBoxFlat_0i1j5")
 Button/styles/pressed = SubResource("StyleBoxFlat_mphia")
 CheckButton/colors/font_color = Color(0.88, 0, 0, 1)
+CheckButton/constants/outline_size = 2
 CheckButton/styles/hover = null
 CheckButton/styles/normal = null
 CheckButton/styles/pressed = null
 Label/colors/font_color = Color(1, 1, 1, 1)
+Label/constants/outline_size = 2
+TabContainer/constants/outline_size = 2
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5pdws"]
 shader = ExtResource("5_047uy")
@@ -191,6 +202,17 @@ offset_right = 107.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
+
+[node name="CRTBackground" type="ColorRect" parent="PauseMenu"]
+material = SubResource("ShaderMaterial_mphia")
+custom_minimum_size = Vector2(1924.23, 1080)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.42, 0.42, 0.42, 0.5882353)
 
 [node name="CanvasGroup" type="CanvasGroup" parent="PauseMenu"]
 material = SubResource("ShaderMaterial_hd3ao")
