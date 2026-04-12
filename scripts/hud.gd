@@ -1,28 +1,55 @@
 extends CanvasLayer
 
-# --- EXISTING HUD VARIABLES ---
+# Standard HUD variables
 @onready var message_screen = $MessageScreen
 @onready var title_label = $MessageScreen/TitleLabel
 @onready var health_label = $HealthLabel
 
-# --- NEW SETTINGS VARIABLES ---
+# Settings variables
 @onready var pause_menu = $PauseMenu
-@onready var tps_button = $PauseMenu/VBoxContainer/CameraToggles/TPSButton
-@onready var fps_button = $PauseMenu/VBoxContainer/CameraToggles/FPSButton
-@onready var master_slider = $PauseMenu/VBoxContainer/MasterSlider
-@onready var fullscreen_toggle = $PauseMenu/VBoxContainer/FullScreenToggle
+
+@onready var fullscreen_toggle = $PauseMenu/VBoxContainer/TabContainer/Video/FullScreenToggle
+@onready var fov_slider = $PauseMenu/VBoxContainer/TabContainer/Video/FOVSlider
+@onready var shake_toggle = $PauseMenu/VBoxContainer/TabContainer/Video/ShakeToggle
+
+@onready var master_slider = $PauseMenu/VBoxContainer/TabContainer/Audio/MasterSlider
+@onready var music_slider = $PauseMenu/VBoxContainer/TabContainer/Audio/MusicSlider
+@onready var sfx_slider = $PauseMenu/VBoxContainer/TabContainer/Audio/SFXSlider
+
+@onready var tps_button = $PauseMenu/VBoxContainer/TabContainer/Gameplay/CameraToggles/TPSButton
+@onready var fps_button = $PauseMenu/VBoxContainer/TabContainer/Gameplay/CameraToggles/FPSButton
+@onready var invert_toggle = $PauseMenu/VBoxContainer/TabContainer/Gameplay/InvertToggle
+@onready var sens_slider = $PauseMenu/VBoxContainer/TabContainer/Gameplay/SensSlider
+
+@onready var remap_overlay = $PauseMenu/RemapOverlay
+@onready var up_button = $PauseMenu/VBoxContainer/TabContainer/Controls/UpBind/UpButton
+@onready var down_button = $PauseMenu/VBoxContainer/TabContainer/Controls/DownBind/DownButton
+@onready var left_button = $PauseMenu/VBoxContainer/TabContainer/Controls/LeftBind/LeftButton
+@onready var right_button = $PauseMenu/VBoxContainer/TabContainer/Controls/RightBind/RightButton
+@onready var attack_button = $PauseMenu/VBoxContainer/TabContainer/Controls/AttackBind/AttackButton
+
 @onready var resume_button = $PauseMenu/VBoxContainer/ResumeButton
 @onready var quit_button = $PauseMenu/VBoxContainer/QuitButton
-@onready var sens_slider = $PauseMenu/VBoxContainer/SensSlider
+
+var is_remapping: bool = false
+var action_to_remap: String = ""
+var button_to_update: Button = null
 
 func _ready():
 	# Initial Visibility
 	quit_button.pressed.connect(quit_game)
 	message_screen.visible = false
 	pause_menu.visible = false
+	remap_overlay.visible = false
 	
 	# Existing GameManager connections
 	update_heart_display(GameManager.current_hearts)
+	update_button_text(up_button, "ui_up")
+	update_button_text(down_button, "ui_down")
+	update_button_text(left_button, "ui_left")
+	update_button_text(right_button, "ui_right")
+	update_button_text(attack_button, "ui_accept")
+	
 	GameManager.health_changed.connect(update_heart_display)
 	GameManager.game_over.connect(show_game_over)
 	GameManager.level_complete.connect(show_win)
@@ -31,31 +58,89 @@ func _ready():
 		fps_button.button_pressed = true
 	else:
 		tps_button.button_pressed = true
-	fps_button.toggled.connect(_on_fps_toggled)
-	tps_button.toggled.connect(_on_tps_toggled)
 	
 	master_slider.max_value = 1.0
 	master_slider.step = 0.05
 	master_slider.value = GlobalSettings.master_vol
 	fullscreen_toggle.button_pressed = GlobalSettings.is_fullscreen
+	invert_toggle.button_pressed = GlobalSettings.invert_y
 
-	master_slider.value_changed.connect(_on_master_changed)
-	fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
-	resume_button.pressed.connect(resume_game)
-	
-	# Setup the Sensitivity Slider
+	# Sensitivity Slider
 	sens_slider.min_value = 0.001
 	sens_slider.max_value = 0.01
 	sens_slider.step = 0.0005
 	sens_slider.value = GlobalSettings.mouse_sens
+	
+	fov_slider.min_value = 70
+	fov_slider.max_value = 120
+	fov_slider.step = 1
+	fov_slider.value = GlobalSettings.fov
+	shake_toggle.button_pressed = GlobalSettings.screen_shake
 
 	# Connect the signal
+	fps_button.toggled.connect(_on_fps_toggled)
+	tps_button.toggled.connect(_on_tps_toggled)
+	master_slider.value_changed.connect(_on_master_changed)
+	music_slider.value_changed.connect(_on_music_changed)
+	sfx_slider.value_changed.connect(_on_sfx_changed)
+	fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
+	invert_toggle.toggled.connect(_on_invert_toggled)
+	resume_button.pressed.connect(resume_game)
 	sens_slider.value_changed.connect(_on_sens_changed)
+	fov_slider.value_changed.connect(_on_fov_changed)
+	shake_toggle.toggled.connect(_on_shake_toggled)
+	
+	up_button.pressed.connect(_on_remap_button_pressed.bind("ui_up", up_button))
+	down_button.pressed.connect(_on_remap_button_pressed.bind("ui_down", down_button))
+	left_button.pressed.connect(_on_remap_button_pressed.bind("ui_left", left_button))
+	right_button.pressed.connect(_on_remap_button_pressed.bind("ui_right", right_button))
+	attack_button.pressed.connect(_on_remap_button_pressed.bind("ui_accept", attack_button))
 
-# --- PAUSE MENU LOGIC ---
+	
+	music_slider.max_value = 1.0; music_slider.step = 0.05
+	sfx_slider.max_value = 1.0; sfx_slider.step = 0.05
+	music_slider.value = GlobalSettings.music_vol
+	sfx_slider.value = GlobalSettings.sfx_vol
+
+# Pause menu logic
 func _input(event):
+	if is_remapping:
+		if event is InputEventKey and event.pressed:
+			var keycode = event.physical_keycode
+			var actions_to_check = ["ui_up", "ui_down", "ui_left", "ui_right", "ui_accept"]
+			for action in actions_to_check:
+				if action != action_to_remap: 
+					for existing_event in InputMap.action_get_events(action):
+						if existing_event is InputEventKey and existing_event.physical_keycode == keycode:
+							
+							button_to_update.text = "Taken!"
+							await get_tree().create_timer(0.8).timeout
+
+							# Revert the button text back to what it was
+							update_button_text(button_to_update, action_to_remap) 
+
+							is_remapping = false
+							remap_overlay.visible = false
+							get_viewport().set_input_as_handled()
+							return
+			
+			var new_event = InputEventKey.new()
+			new_event.physical_keycode = keycode
+			InputMap.action_erase_events(action_to_remap)
+			InputMap.action_add_event(action_to_remap, new_event)
+
+			GlobalSettings.keybinds[action_to_remap] = keycode
+			GlobalSettings.save_settings()
+			
+			button_to_update.text = OS.get_keycode_string(keycode)
+
+			is_remapping = false
+			remap_overlay.visible = false  
+			
+			get_viewport().set_input_as_handled()
+		return
+
 	if event.is_action_pressed("ui_cancel"):
-		# Don't let them pause if they are dead or just won!
 		if message_screen.visible:
 			return
 			
@@ -103,6 +188,45 @@ func _on_tps_toggled(toggled_on: bool):
 	
 func _on_sens_changed(value: float):
 	GlobalSettings.mouse_sens = value
+	GlobalSettings.save_settings()
+	
+func _on_fov_changed(value: float):
+	GlobalSettings.fov = value
+	GlobalSettings.save_settings()
+
+	var player = get_tree().get_first_node_in_group("player")
+	if player and player.has_method("update_fov"): 
+		player.update_fov(value)
+
+func update_button_text(button: Button, action: String):
+	var events = InputMap.action_get_events(action)
+	if events.size() > 0:
+		var event = events[0]
+		if event is InputEventKey:
+			button.text = OS.get_keycode_string(event.physical_keycode)
+
+func _on_remap_button_pressed(action: String, button: Button):
+	action_to_remap = action
+	button_to_update = button
+	is_remapping = true
+	remap_overlay.visible = true
+
+func _on_shake_toggled(toggled_on: bool):
+	GlobalSettings.screen_shake = toggled_on
+	GlobalSettings.save_settings()
+	
+func _on_music_changed(value: float):
+	GlobalSettings.music_vol = value
+	GlobalSettings.apply_settings()
+	GlobalSettings.save_settings()
+
+func _on_sfx_changed(value: float):
+	GlobalSettings.sfx_vol = value
+	GlobalSettings.apply_settings()
+	GlobalSettings.save_settings()
+
+func _on_invert_toggled(toggled_on: bool):
+	GlobalSettings.invert_y = toggled_on
 	GlobalSettings.save_settings()
 	
 func update_heart_display(amount):

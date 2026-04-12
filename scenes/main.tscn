@@ -377,3 +377,4 @@ draw_pass_1 = SubResource("QuadMesh_85g3d")
 stream = ExtResource("8_tipki")
 volume_db = -10.0
 autoplay = true
+bus = &"Music"

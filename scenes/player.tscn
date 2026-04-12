@@ -8394,14 +8394,17 @@ near = 0.1
 [node name="SwordAudio" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(-0.056011505, 0.9984162, -0.005276199, -0.949526, -0.05163365, 0.3094097, 0.30864722, 0.022340389, 0.9509142, -0.51678324, 0.6703083, 0.25376788)
 stream = ExtResource("4_qlg0r")
+bus = &"SFX"
 
 [node name="PowerupAudio" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("4_dqkch")
+bus = &"SFX"
 
 [node name="GettingHit" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(-0.056011505, 0.9984162, -0.005276201, -0.949526, -0.051633652, 0.30940968, 0.30864722, 0.02234039, 0.9509142, -0.51678324, 0.6703083, 0.25376788)
 stream = ExtResource("6_tuyoq")
 volume_db = 5.0
+bus = &"SFX"
 
 [connection signal="area_entered" from="Knight/Rig_Medium/Skeleton3D/BoneAttachment3D/sword/swordhitbox" to="." method="_on_swordhitbox_area_entered"]
 [connection signal="body_entered" from="Knight/Rig_Medium/Skeleton3D/BoneAttachment3D/sword/swordhitbox" to="." method="_on_swordhitbox_body_entered"]

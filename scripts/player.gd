@@ -28,11 +28,14 @@ func _ready():
 	update_camera_mode()
 	set_view_mode(GlobalSettings.prefer_fps)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	update_fov(GlobalSettings.fov)
 
 func _input(event):
 	if is_fps_mode and event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * GlobalSettings.mouse_sens)
-		head.rotate_x(event.relative.y * GlobalSettings.mouse_sens) 
+		
+		var invert_mult = -1 if GlobalSettings.invert_y else 1
+		head.rotate_x(event.relative.y * GlobalSettings.mouse_sens * invert_mult) 
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 
 func _process(delta):
@@ -128,6 +131,9 @@ func update_camera_mode():
 		if camera_tps: camera_tps.current = true
 		toggle_body_parts(true)
 
+func update_fov(new_fov: float):
+	if camera_fps: camera_fps.fov = new_fov
+
 func toggle_body_parts(show_full_body: bool):
 	if not skeleton: return
 	for child in skeleton.get_children():
@@ -166,8 +172,9 @@ func hit():
 	else:
 		flash_damage()
 		shake_camera(0.2, 0.2)
-
+		
 func shake_camera(intensity: float, duration: float):
+	if not GlobalSettings.screen_shake: return 
 	shake_intensity = intensity
 	shake_duration = duration
 
