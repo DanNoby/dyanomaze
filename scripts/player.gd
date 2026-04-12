@@ -1,7 +1,6 @@
 extends CharacterBody3D
 
 const SPEED = 5.0
-const MOUSE_SENSITIVITY = 0.003
 
 var is_fps_mode = false
 var is_invincible = false
@@ -29,20 +28,13 @@ func _ready():
 	update_camera_mode()
 
 func _input(event):
-	if is_fps_mode and event is InputEventMouseMotion:
-		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
-		head.rotate_x(event.relative.y * MOUSE_SENSITIVITY) 
+	if is_fps_mode and event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		rotate_y(-event.relative.x * GlobalSettings.mouse_sens)
+		head.rotate_x(event.relative.y * GlobalSettings.mouse_sens) 
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 	
 	if Input.is_action_just_pressed("change_view"): 
 		toggle_view_mode()
-
-	if Input.is_action_just_pressed("ui_cancel"):
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	
-	if Input.is_action_just_pressed("ui_accept"): 
-		if is_fps_mode and GameManager.current_hearts > 0: 
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _process(delta):
 	if shake_duration > 0:
@@ -83,21 +75,22 @@ func _physics_process(delta):
 	
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var direction = Vector3.ZERO
-	
+
 	if is_fps_mode:
-		var raw_dir = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-		direction = -raw_dir 
+		direction = -(transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	else:
 		direction = Vector3(-input_dir.x, 0, -input_dir.y).normalized()
-	
+
 	if direction:
 		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
-		
+		velocity.z = direction.z * SPEED  
+
 		if not is_fps_mode and mesh:
 			var target_spot = global_position + direction
-			mesh.look_at(target_spot, Vector3.UP)
-			mesh.rotate_y(deg_to_rad(180)) 
+			# Add a tiny offset to prevent look_at errors if direction is perfectly zeroed
+			if global_position.distance_to(target_spot) > 0.001: 
+				mesh.look_at(target_spot, Vector3.UP)
+				mesh.rotate_y(deg_to_rad(180)) 
 		
 		if not is_attacking:
 			if anim.current_animation != "Running_A": anim.play("Running_A", 0.3)
@@ -105,7 +98,7 @@ func _physics_process(delta):
 	else:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
-		
+
 		if not is_attacking:
 			if anim.current_animation != "Idle_B": anim.play("Idle_B", 0.3)
 
@@ -115,9 +108,12 @@ func _physics_process(delta):
 		die_instant()
 
 func toggle_view_mode():
-	if not is_fps_mode: 
+	if not is_fps_mode:
 		rotation.y = mesh.rotation.y
-		mesh.rotation.y = deg_to_rad(0)
+		mesh.rotation.y = 0
+	else:
+		mesh.rotation.y = rotation.y	
+		rotation.y = 0
 		
 	is_fps_mode = not is_fps_mode
 	update_camera_mode()
