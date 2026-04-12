@@ -8,32 +8,35 @@ extends CanvasLayer
 # Settings variables
 @onready var pause_menu = $PauseMenu
 
-@onready var fullscreen_toggle = $PauseMenu/VBoxContainer/TabContainer/Video/FullScreenToggle
-@onready var fov_slider = $PauseMenu/VBoxContainer/TabContainer/Video/FOVSlider
-@onready var shake_toggle = $PauseMenu/VBoxContainer/TabContainer/Video/ShakeToggle
-@onready var hud_toggle = $PauseMenu/VBoxContainer/TabContainer/Video/HUDToggle
+# VIDEO TAB
+@onready var fullscreen_toggle = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer/FullScreenToggle
+@onready var fov_slider = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer/FOVSlider
+@onready var shake_toggle = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer/ShakeToggle
+@onready var hud_toggle = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer/HUDToggle
 
-@onready var output_dropdown = $PauseMenu/VBoxContainer/TabContainer/Audio/OutputContainer/OutputDropdown
-@onready var master_slider = $PauseMenu/VBoxContainer/TabContainer/Audio/MasterSlider
-@onready var music_slider = $PauseMenu/VBoxContainer/TabContainer/Audio/MusicSlider
-@onready var sfx_slider = $PauseMenu/VBoxContainer/TabContainer/Audio/SFXSlider
+# AUDIO TAB
+@onready var output_dropdown = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer/OutputDropdown
+@onready var master_slider = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer/MasterSlider
+@onready var music_slider = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer/MusicSlider
+@onready var sfx_slider = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer/SFXSlider
 
-@onready var tps_button = $PauseMenu/VBoxContainer/TabContainer/Gameplay/CameraToggles/TPSButton
-@onready var fps_button = $PauseMenu/VBoxContainer/TabContainer/Gameplay/CameraToggles/FPSButton
-@onready var keyboard_btn = $PauseMenu/VBoxContainer/TabContainer/Gameplay/InputToggles/KeyboardButton
-@onready var controller_btn = $PauseMenu/VBoxContainer/TabContainer/Gameplay/InputToggles/ControllerButton
-@onready var invert_toggle = $PauseMenu/VBoxContainer/TabContainer/Gameplay/InvertToggle
-@onready var sens_slider = $PauseMenu/VBoxContainer/TabContainer/Gameplay/SensSlider
+# GAMEPLAY TAB
+@onready var tps_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/TPSButton
+@onready var fps_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/FPSButton
+@onready var keyboard_btn = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/KeyboardButton
+@onready var controller_btn = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/ControllerButton
+@onready var invert_toggle = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/InvertToggle
+@onready var sens_slider = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/SensSlider
 
+# CONTROLS TAB 
 @onready var remap_overlay = $PauseMenu/RemapOverlay
-@onready var up_button = $PauseMenu/VBoxContainer/TabContainer/Controls/UpBind/UpButton
-@onready var down_button = $PauseMenu/VBoxContainer/TabContainer/Controls/DownBind/DownButton
-@onready var left_button = $PauseMenu/VBoxContainer/TabContainer/Controls/LeftBind/LeftButton
-@onready var right_button = $PauseMenu/VBoxContainer/TabContainer/Controls/RightBind/RightButton
-@onready var attack_button = $PauseMenu/VBoxContainer/TabContainer/Controls/AttackBind/AttackButton
-
-@onready var resume_button = $PauseMenu/VBoxContainer/ResumeButton
-@onready var quit_button = $PauseMenu/VBoxContainer/QuitButton
+@onready var up_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer/UpButton
+@onready var down_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer/DownButton
+@onready var left_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer/LeftButton
+@onready var right_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer/RightButton
+@onready var attack_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer/AttackButton
+@onready var resume_button = $PauseMenu/CanvasGroup/VBoxContainer/ResumeButton
+@onready var quit_button = $PauseMenu/CanvasGroup/VBoxContainer/QuitButton
 
 @onready var score_ui = $ScoreLabel
 @onready var health_ui = $HealthLabel
@@ -173,7 +176,7 @@ func pause_game():
 	pause_menu.visible = true
 	get_tree().paused = true
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	$PauseMenu/VBoxContainer/ResumeButton.grab_focus()
+	$PauseMenu/CanvasGroup/VBoxContainer/ResumeButton.grab_focus()
 	update_audio_dropdown()
 
 func resume_game():

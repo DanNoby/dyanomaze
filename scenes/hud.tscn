@@ -1,11 +1,13 @@
-[gd_scene load_steps=16 format=3 uid="uid://gbtcxvrrd3e3"]
+[gd_scene load_steps=23 format=3 uid="uid://gbtcxvrrd3e3"]
 
 [ext_resource type="Script" uid="uid://cdr31a4hpuah2" path="res://scripts/hud.gd" id="1_ahhtf"]
 [ext_resource type="FontFile" uid="uid://bnwtnbbagtrpv" path="res://assets/Pixel Game.otf" id="2_5ysmq"]
 [ext_resource type="Script" uid="uid://clid00otdahoh" path="res://scripts/score_label.gd" id="3_6fi6k"]
 [ext_resource type="Shader" uid="uid://c7kqcqf0lpm7" path="res://scripts/hud.gdshader" id="4_6fi6k"]
+[ext_resource type="FontFile" uid="uid://bngfdemip6riv" path="res://assets/fonts/Pixel Game.otf" id="5_5pdws"]
 [ext_resource type="Shader" uid="uid://cyfnlm3a56v3q" path="res://scripts/titletext.gdshader" id="5_047uy"]
 [ext_resource type="FontFile" uid="uid://b4jy4720bv8fu" path="res://assets/fonts/titlefont.ttf" id="5_uo2fv"]
+[ext_resource type="Shader" uid="uid://dt8clgwibxger" path="res://scripts/glitch.gdshader" id="6_hd3ao"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_oo0fn"]
 font_size = 32
@@ -27,6 +29,50 @@ shader_parameter/noise_density = 400.0
 shader_parameter/speed = -1.0
 shader_parameter/dust_color = Color(0.85, 0.75, 0.55, 1)
 shader_parameter/opacity = 0.1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hd3ao"]
+shader = ExtResource("6_hd3ao")
+shader_parameter/glitch_speed = 0.01
+shader_parameter/glitch_size = 0.003
+shader_parameter/brightness_multiplier = 1.5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hd3ao"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.6967742, 0.25288823, 0.74672335, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0i1j5"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.81470364, 0.0005165392, 0.8137292, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mphia"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.8083506, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_hd3ao"]
+default_font = ExtResource("5_5pdws")
+default_font_size = 24
+Button/colors/font_color = Color(0.88, 0, 0, 1)
+Button/styles/focus = null
+Button/styles/hover = SubResource("StyleBoxFlat_hd3ao")
+Button/styles/normal = SubResource("StyleBoxFlat_0i1j5")
+Button/styles/pressed = SubResource("StyleBoxFlat_mphia")
+CheckButton/colors/font_color = Color(0.88, 0, 0, 1)
+CheckButton/styles/hover = null
+CheckButton/styles/normal = null
+CheckButton/styles/pressed = null
+Label/colors/font_color = Color(1, 1, 1, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5pdws"]
 shader = ExtResource("5_047uy")
@@ -146,22 +192,25 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu"]
-layout_mode = 1
+[node name="CanvasGroup" type="CanvasGroup" parent="PauseMenu"]
+material = SubResource("ShaderMaterial_hd3ao")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu/CanvasGroup"]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -595.0
-offset_top = -437.99997
+offset_top = -439.99997
 offset_right = -172.0
-offset_bottom = -81.99997
+offset_bottom = -79.99997
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(2.5, 2.594)
+theme = SubResource("Theme_hd3ao")
 
-[node name="GameTitle" type="RichTextLabel" parent="PauseMenu/VBoxContainer"]
+[node name="GameTitle" type="RichTextLabel" parent="PauseMenu/CanvasGroup/VBoxContainer"]
 material = SubResource("ShaderMaterial_5pdws")
 custom_minimum_size = Vector2(423.41, 72.75)
 layout_mode = 2
@@ -175,205 +224,256 @@ theme_override_font_sizes/normal_font_size = 72
 bbcode_enabled = true
 text = "[center][shake rate=20.0 level=6 connected=1]DYANOMAZE[/shake][/center]"
 
-[node name="TabContainer" type="TabContainer" parent="PauseMenu/VBoxContainer"]
+[node name="TabContainer" type="TabContainer" parent="PauseMenu/CanvasGroup/VBoxContainer"]
 custom_minimum_size = Vector2(350, 210)
 layout_mode = 2
 tab_alignment = 1
-current_tab = 2
+current_tab = 0
 
-[node name="Video" type="VBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer"]
-visible = false
+[node name="Video" type="TabBar" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer"]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="HUDToggle" type="CheckButton" parent="PauseMenu/VBoxContainer/TabContainer/Video"]
+[node name="MarginContainer" type="MarginContainer" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GridContainer" type="GridContainer" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer"]
 layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "SHOW HUD"
 
-[node name="FullScreenToggle" type="CheckButton" parent="PauseMenu/VBoxContainer/TabContainer/Video"]
+[node name="HUDToggle" type="CheckButton" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Label2" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "FULLSCREEN"
 
-[node name="FOV" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Video"]
+[node name="FullScreenToggle" type="CheckButton" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+
+[node name="FOV" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 1
 text = "FOV"
 
-[node name="FOVSlider" type="HSlider" parent="PauseMenu/VBoxContainer/TabContainer/Video"]
+[node name="FOVSlider" type="HSlider" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 min_value = 70.0
 max_value = 120.0
 value = 70.0
 
-[node name="ShakeToggle" type="CheckButton" parent="PauseMenu/VBoxContainer/TabContainer/Video"]
+[node name="Label3" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "SCREEN SHAKE"
 
-[node name="Audio" type="VBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer"]
+[node name="ShakeToggle" type="CheckButton" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Audio" type="TabBar" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="Master Volume" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Audio"]
+[node name="MarginContainer" type="MarginContainer" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GridContainer" type="GridContainer" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer"]
+custom_minimum_size = Vector2(350, 0)
+layout_mode = 2
+columns = 2
+
+[node name="Master Volume" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "MASTER VOLUME"
 
-[node name="MasterSlider" type="HSlider" parent="PauseMenu/VBoxContainer/TabContainer/Audio"]
+[node name="MasterSlider" type="HSlider" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="Music Volume" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Audio"]
+[node name="Music Volume" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "MUSIC VOLUME"
 
-[node name="MusicSlider" type="HSlider" parent="PauseMenu/VBoxContainer/TabContainer/Audio"]
+[node name="MusicSlider" type="HSlider" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer"]
 layout_mode = 2
 
-[node name="SFX Volume" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Audio"]
+[node name="SFX Volume" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "SFX VOLUME"
 
-[node name="SFXSlider" type="HSlider" parent="PauseMenu/VBoxContainer/TabContainer/Audio"]
+[node name="SFXSlider" type="HSlider" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer"]
 layout_mode = 2
 
-[node name="OutputContainer" type="HBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer/Audio"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Audio/OutputContainer"]
+[node name="Label" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Output Device"
 
-[node name="OutputDropdown" type="OptionButton" parent="PauseMenu/VBoxContainer/TabContainer/Audio/OutputContainer"]
+[node name="OutputDropdown" type="OptionButton" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer"]
 layout_mode = 2
 
-[node name="Gameplay" type="VBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer"]
+[node name="Gameplay" type="TabBar" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
-[node name="CameraToggles" type="HBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay"]
-layout_mode = 2
-alignment = 1
+[node name="MarginContainer" type="MarginContainer" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="TPSButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay/CameraToggles"]
+[node name="GridContainer" type="GridContainer" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer"]
 layout_mode = 2
+columns = 2
+
+[node name="TPSButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 toggle_mode = true
 button_group = SubResource("ButtonGroup_6fi6k")
 text = "TPS"
 
-[node name="FPSButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay/CameraToggles"]
+[node name="FPSButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 toggle_mode = true
 button_group = SubResource("ButtonGroup_uo2fv")
 text = "FPS"
 
-[node name="InputToggles" type="HBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay"]
-layout_mode = 2
-alignment = 1
-
-[node name="KeyboardButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay/InputToggles"]
+[node name="KeyboardButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_047uy")
 text = "Keyboard"
 
-[node name="ControllerButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay/InputToggles"]
+[node name="ControllerButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer"]
 layout_mode = 2
 toggle_mode = true
 button_group = SubResource("ButtonGroup_5pdws")
 text = "Controller"
 
-[node name="SensLabel" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay"]
+[node name="SensLabel" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "MOUSE SENSITIVITY"
 
-[node name="SensSlider" type="HSlider" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay"]
+[node name="SensSlider" type="HSlider" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer"]
 layout_mode = 2
 min_value = 0.003
 max_value = 0.01
 step = 0.001
 value = 0.003
 
-[node name="InvertToggle" type="CheckButton" parent="PauseMenu/VBoxContainer/TabContainer/Gameplay"]
+[node name="Label5" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer"]
 layout_mode = 2
-text = "INVERT AXIS"
+text = "Invert Axis"
 
-[node name="Controls" type="VBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer"]
+[node name="InvertToggle" type="CheckButton" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Controls" type="TabBar" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="UpBind" type="HBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer/Controls"]
-layout_mode = 2
-size_flags_vertical = 4
+[node name="MarginContainer" type="MarginContainer" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="Label" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Controls/UpBind"]
+[node name="GridContainer" type="GridContainer" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer"]
+layout_mode = 2
+columns = 2
+
+[node name="Label" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Move Up"
 
-[node name="UpButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Controls/UpBind"]
+[node name="UpButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "W"
 
-[node name="DownBind" type="HBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer/Controls"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Controls/DownBind"]
+[node name="Label2" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Move Down"
 
-[node name="DownButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Controls/DownBind"]
+[node name="DownButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "D"
 
-[node name="LeftBind" type="HBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer/Controls"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Controls/LeftBind"]
+[node name="Label3" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Move Left"
 
-[node name="LeftButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Controls/LeftBind"]
+[node name="LeftButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "A"
 
-[node name="RightBind" type="HBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer/Controls"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Controls/RightBind"]
+[node name="Label4" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Move Right"
 
-[node name="RightButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Controls/RightBind"]
+[node name="RightButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "D"
 
-[node name="AttackBind" type="HBoxContainer" parent="PauseMenu/VBoxContainer/TabContainer/Controls"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="PauseMenu/VBoxContainer/TabContainer/Controls/AttackBind"]
+[node name="Label5" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 text = "Attack"
 
-[node name="AttackButton" type="Button" parent="PauseMenu/VBoxContainer/TabContainer/Controls/AttackBind"]
+[node name="AttackButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer"]
 layout_mode = 2
 text = "Space"
 
-[node name="ResumeButton" type="Button" parent="PauseMenu/VBoxContainer"]
+[node name="ResumeButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 4
 text = "RESUME GAME"
 
-[node name="QuitButton" type="Button" parent="PauseMenu/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer"]
 layout_mode = 2
 text = "QUIT GAME"
 

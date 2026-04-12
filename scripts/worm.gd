@@ -62,7 +62,6 @@ func die():
 	var chunks = death_particles.instantiate()
 	get_tree().current_scene.add_child(chunks)
 	
-	# 2. Move chunks to the enemy's exact position before it dies
 	chunks.global_position = global_position
 	queue_free()
 
