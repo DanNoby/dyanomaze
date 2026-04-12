@@ -7,6 +7,8 @@ extends CanvasLayer
 
 # --- NEW SETTINGS VARIABLES ---
 @onready var pause_menu = $PauseMenu
+@onready var tps_button = $PauseMenu/VBoxContainer/CameraToggles/TPSButton
+@onready var fps_button = $PauseMenu/VBoxContainer/CameraToggles/FPSButton
 @onready var master_slider = $PauseMenu/VBoxContainer/MasterSlider
 @onready var fullscreen_toggle = $PauseMenu/VBoxContainer/FullScreenToggle
 @onready var resume_button = $PauseMenu/VBoxContainer/ResumeButton
@@ -25,7 +27,13 @@ func _ready():
 	GameManager.game_over.connect(show_game_over)
 	GameManager.level_complete.connect(show_win)
 	
-	# --- NEW SETTINGS SETUP ---
+	if GlobalSettings.prefer_fps:
+		fps_button.button_pressed = true
+	else:
+		tps_button.button_pressed = true
+	fps_button.toggled.connect(_on_fps_toggled)
+	tps_button.toggled.connect(_on_tps_toggled)
+	
 	master_slider.max_value = 1.0
 	master_slider.step = 0.05
 	master_slider.value = GlobalSettings.master_vol
@@ -78,6 +86,20 @@ func _on_fullscreen_toggled(toggled_on: bool):
 	GlobalSettings.is_fullscreen = toggled_on
 	GlobalSettings.apply_settings()
 	GlobalSettings.save_settings()
+	
+func _on_fps_toggled(toggled_on: bool):
+	if toggled_on:
+		GlobalSettings.prefer_fps = true
+		GlobalSettings.save_settings()
+		var player = get_tree().get_first_node_in_group("player")
+		if player: player.set_view_mode(true)
+
+func _on_tps_toggled(toggled_on: bool):
+	if toggled_on:
+		GlobalSettings.prefer_fps = false
+		GlobalSettings.save_settings()
+		var player = get_tree().get_first_node_in_group("player")
+		if player: player.set_view_mode(false)
 	
 func _on_sens_changed(value: float):
 	GlobalSettings.mouse_sens = value

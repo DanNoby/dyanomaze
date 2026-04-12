@@ -26,15 +26,14 @@ var tps_sword_pos = Vector3.ZERO
 func _ready():
 	tps_sword_pos = sword_container.position
 	update_camera_mode()
+	set_view_mode(GlobalSettings.prefer_fps)
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _input(event):
 	if is_fps_mode and event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		rotate_y(-event.relative.x * GlobalSettings.mouse_sens)
 		head.rotate_x(event.relative.y * GlobalSettings.mouse_sens) 
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-90), deg_to_rad(90))
-	
-	if Input.is_action_just_pressed("change_view"): 
-		toggle_view_mode()
 
 func _process(delta):
 	if shake_duration > 0:
@@ -107,27 +106,26 @@ func _physics_process(delta):
 	if global_position.y < -5.0:
 		die_instant()
 
-func toggle_view_mode():
-	if not is_fps_mode:
+func set_view_mode(wants_fps: bool):
+	if is_fps_mode == wants_fps: return 
+
+	if wants_fps:
 		rotation.y = mesh.rotation.y
 		mesh.rotation.y = 0
 	else:
-		mesh.rotation.y = rotation.y	
+		mesh.rotation.y = rotation.y
 		rotation.y = 0
-		
-	is_fps_mode = not is_fps_mode
+	is_fps_mode = wants_fps
 	update_camera_mode()
 
 func update_camera_mode():
 	if is_fps_mode:
 		if camera_tps: camera_tps.current = false
 		if camera_fps: camera_fps.current = true
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		toggle_body_parts(false) 
 	else:
 		if camera_fps: camera_fps.current = false
 		if camera_tps: camera_tps.current = true
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		toggle_body_parts(true)
 
 func toggle_body_parts(show_full_body: bool):
