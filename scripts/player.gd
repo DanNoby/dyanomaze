@@ -32,9 +32,10 @@ func _ready():
 
 func _input(event):
 	if is_fps_mode and event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		
 		if not GlobalSettings.use_controller:
 			rotate_y(-event.relative.x * GlobalSettings.mouse_sens)
-		
+			
 			var invert_mult = -1 if GlobalSettings.invert_y else 1
 			head.rotate_x(event.relative.y * GlobalSettings.mouse_sens * invert_mult) 
 			head.rotation.x = clamp(head.rotation.x, deg_to_rad(-90), deg_to_rad(90))
@@ -78,16 +79,19 @@ func _physics_process(delta):
 	
 	var input_dir = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
 	var direction = Vector3.ZERO
-
+	
 	if is_fps_mode:
-		var joy_look = Input.get_vector("look_left", "look_right", "look_up", "look_down")
-		if joy_look.length() > 0.1: 
-			var look_speed = GlobalSettings.mouse_sens * 20.0 
-			rotate_y(-joy_look.x * look_speed)
+		# FPS controller look
+		if GlobalSettings.use_controller:
+			var joy_look = Input.get_vector("look_left", "look_right", "look_up", "look_down")
+			if joy_look.length() > 0.1: 
+				var look_speed = GlobalSettings.mouse_sens * 20.0 
+				rotate_y(-joy_look.x * look_speed)
 
-			var invert_mult = -1 if GlobalSettings.invert_y else 1
-			head.rotate_x(joy_look.y * look_speed * invert_mult)
-			head.rotation.x = clamp(head.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+				var invert_mult = -1 if GlobalSettings.invert_y else 1
+				head.rotate_x(joy_look.y * look_speed * invert_mult)
+				head.rotation.x = clamp(head.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+
 		direction = -(transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	else:
 		direction = Vector3(-input_dir.x, 0, -input_dir.y).normalized()

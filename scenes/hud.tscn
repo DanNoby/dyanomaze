@@ -156,6 +156,7 @@ offset_bottom = -163.99997
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(2.5, 2.594)
+mouse_filter = 2
 theme = SubResource("Theme_hd3ao")
 
 [node name="LogoLabel" type="RichTextLabel" parent="PauseMenu/CanvasGroup/VBoxContainer"]
@@ -175,6 +176,7 @@ text = "[center][shake rate=20.0 level=6 connected=1]DYANOMAZE[/shake][/center]"
 horizontal_alignment = 1
 
 [node name="FinalScoreLabel" type="Label" parent="PauseMenu/CanvasGroup/VBoxContainer"]
+visible = false
 layout_mode = 2
 theme = SubResource("Theme_apjy4")
 theme_override_font_sizes/font_size = 50
@@ -456,10 +458,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -1262.0
-offset_top = -1143.0
-offset_right = -622.0
-offset_bottom = -503.0
+offset_left = -1261.6
+offset_top = -1143.2001
+offset_right = -621.6
+offset_bottom = -503.20007
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(3.77, 3.77)
