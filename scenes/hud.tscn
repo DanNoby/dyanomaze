@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://gbtcxvrrd3e3"]
+[gd_scene load_steps=28 format=3 uid="uid://gbtcxvrrd3e3"]
 
 [ext_resource type="Script" uid="uid://cdr31a4hpuah2" path="res://scripts/hud.gd" id="1_ahhtf"]
 [ext_resource type="FontFile" uid="uid://bnwtnbbagtrpv" path="res://assets/Pixel Game.otf" id="2_5ysmq"]
@@ -9,33 +9,14 @@
 [ext_resource type="Shader" uid="uid://cyfnlm3a56v3q" path="res://scripts/titletext.gdshader" id="5_047uy"]
 [ext_resource type="FontFile" uid="uid://b4jy4720bv8fu" path="res://assets/fonts/titlefont.ttf" id="5_uo2fv"]
 [ext_resource type="Shader" uid="uid://dt8clgwibxger" path="res://scripts/glitch.gdshader" id="6_hd3ao"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_oo0fn"]
-font_size = 32
-font_color = Color(1, 0.18431373, 0, 1)
-outline_size = 10
-
-[sub_resource type="LabelSettings" id="LabelSettings_5ysmq"]
-font_size = 64
-outline_size = 1
-
-[sub_resource type="LabelSettings" id="LabelSettings_6fi6k"]
-font_size = 50
-outline_size = 10
-outline_color = Color(0, 0, 0, 1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_uo2fv"]
-shader = ExtResource("4_6fi6k")
-shader_parameter/noise_density = 400.0
-shader_parameter/speed = -1.0
-shader_parameter/dust_color = Color(0.85, 0.75, 0.55, 1)
-shader_parameter/opacity = 0.1
+[ext_resource type="Shader" uid="uid://b0jdk5jqj6gcp" path="res://scripts/bezel.gdshader" id="7_0m4u7"]
+[ext_resource type="Texture2D" uid="uid://djudg668nec8c" path="res://assets/retroTV.png" id="10_mphia"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mphia"]
 shader = ExtResource("5_0i1j5")
-shader_parameter/static_intensity = 1.0
-shader_parameter/scanline_intensity = 0.0130000006175
-shader_parameter/vignette_scale = 1.190000056525
+shader_parameter/static_intensity = 0.470000022325
+shader_parameter/scanline_intensity = 0.010000000475
+shader_parameter/vignette_scale = 1.86400008854
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hd3ao"]
 shader = ExtResource("6_hd3ao")
@@ -100,95 +81,36 @@ shader_parameter/spread_amount = 0.0
 
 [sub_resource type="ButtonGroup" id="ButtonGroup_5pdws"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_apjy4"]
+shader = ExtResource("7_0m4u7")
+shader_parameter/pixel_size = 4.0
+shader_parameter/color_crunch = 12.582000502645
+shader_parameter/brightness = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_oo0fn"]
+font_size = 32
+font_color = Color(1, 0.18431373, 0, 1)
+outline_size = 10
+
+[sub_resource type="LabelSettings" id="LabelSettings_5ysmq"]
+font_size = 64
+outline_size = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_6fi6k"]
+font_size = 50
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uo2fv"]
+shader = ExtResource("4_6fi6k")
+shader_parameter/noise_density = 400.0
+shader_parameter/speed = -1.0
+shader_parameter/dust_color = Color(0.85, 0.75, 0.55, 1)
+shader_parameter/opacity = 0.1
+
 [node name="HUD" type="CanvasLayer"]
 process_mode = 3
 script = ExtResource("1_ahhtf")
-
-[node name="HealthLabel" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = ExtResource("2_5ysmq")
-theme_override_font_sizes/font_size = 16
-text = "HP ♥♥♥"
-label_settings = SubResource("LabelSettings_oo0fn")
-
-[node name="MessageScreen" type="Control" parent="."]
-visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="ColorRect" type="ColorRect" parent="MessageScreen"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.5882353)
-
-[node name="TitleLabel" type="Label" parent="MessageScreen"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -168.0
-offset_top = -44.0
-offset_right = 168.0
-offset_bottom = 44.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "YOU DIED !"
-label_settings = SubResource("LabelSettings_5ysmq")
-
-[node name="RestartButton" type="Button" parent="MessageScreen"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -50.0
-offset_top = 57.0
-offset_right = 46.0
-offset_bottom = 88.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "TRY AGAIN "
-
-[node name="ScoreLabel" type="Label" parent="." groups=["ScoreUI"]]
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -20.0
-offset_right = 20.0
-offset_bottom = 23.0
-grow_horizontal = 2
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = ExtResource("2_5ysmq")
-theme_override_font_sizes/font_size = 64
-text = "Score :"
-label_settings = SubResource("LabelSettings_6fi6k")
-horizontal_alignment = 1
-script = ExtResource("3_6fi6k")
-
-[node name="DustOverlay" type="ColorRect" parent="."]
-material = SubResource("ShaderMaterial_uo2fv")
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
 
 [node name="PauseMenu" type="ColorRect" parent="."]
 modulate = Color(1, 1, 1, 0.49411765)
@@ -201,6 +123,7 @@ offset_left = 107.0
 offset_right = 107.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(1.25, 1.25)
 color = Color(0, 0, 0, 1)
 
 [node name="CRTBackground" type="ColorRect" parent="PauseMenu"]
@@ -210,8 +133,13 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -791.00006
+offset_top = -540.0
+offset_right = 1133.23
+offset_bottom = 540.0
 grow_horizontal = 2
 grow_vertical = 2
+scale = Vector2(0.76000094, 1)
 color = Color(0.42, 0.42, 0.42, 0.5882353)
 
 [node name="CanvasGroup" type="CanvasGroup" parent="PauseMenu"]
@@ -499,6 +427,22 @@ text = "RESUME GAME"
 layout_mode = 2
 text = "QUIT GAME"
 
+[node name="TVBezel" type="TextureRect" parent="PauseMenu"]
+material = SubResource("ShaderMaterial_apjy4")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1262.0
+offset_top = -1143.0
+offset_right = -622.0
+offset_bottom = -503.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3.77, 3.77)
+mouse_filter = 2
+texture = ExtResource("10_mphia")
+
 [node name="RemapOverlay" type="ColorRect" parent="PauseMenu"]
 visible = false
 layout_mode = 1
@@ -524,5 +468,91 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(2.368901, 2.7144616)
 text = "Press any key to assign"
+
+[node name="HealthLabel" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("2_5ysmq")
+theme_override_font_sizes/font_size = 16
+text = "HP ♥♥♥"
+label_settings = SubResource("LabelSettings_oo0fn")
+
+[node name="MessageScreen" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="MessageScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="TitleLabel" type="Label" parent="MessageScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -168.0
+offset_top = -44.0
+offset_right = 168.0
+offset_bottom = 44.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "YOU DIED !"
+label_settings = SubResource("LabelSettings_5ysmq")
+
+[node name="RestartButton" type="Button" parent="MessageScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = 57.0
+offset_right = 46.0
+offset_bottom = 88.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "TRY AGAIN "
+
+[node name="ScoreLabel" type="Label" parent="." groups=["ScoreUI"]]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("2_5ysmq")
+theme_override_font_sizes/font_size = 64
+text = "Score :"
+label_settings = SubResource("LabelSettings_6fi6k")
+horizontal_alignment = 1
+script = ExtResource("3_6fi6k")
+
+[node name="DustOverlay" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_uo2fv")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [connection signal="pressed" from="MessageScreen/RestartButton" to="." method="_on_restart_button_pressed"]
