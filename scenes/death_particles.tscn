@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://cxxnnehvhivuo"]
 
 [ext_resource type="Script" uid="uid://pc8hsd8apkj2" path="res://scripts/death_particles.gd" id="1_j5v76"]
-[ext_resource type="AudioStream" uid="uid://csqxhw8a70bp" path="res://assets/sounds/enemydeath.wav" id="2_u27mo"]
+[ext_resource type="AudioStream" uid="uid://csqxhw8a70bp" path="res://sounds/enemydeath.wav" id="2_u27mo"]
 
 [sub_resource type="Curve" id="Curve_85g3d"]
 _data = [Vector2(0.0038910508, 1), 0.0, 0.0, 0, 0, Vector2(0.99221784, 0), 0.0, 0.0, 0, 0]

@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://cilpcqx7mgef6"
-path="res://.godot/imported/switch.wav-6537c3d934864d65eb49813a420eae6a.sample"
+uid="uid://csqxhw8a70bp"
+path="res://.godot/imported/enemydeath.wav-3131d424ae5dad00be947da899866e69.sample"
 
 [deps]
 
-source_file="res://assets/sounds/switch.wav"
-dest_files=["res://.godot/imported/switch.wav-6537c3d934864d65eb49813a420eae6a.sample"]
+source_file="res://sounds/enemydeath.wav"
+dest_files=["res://.godot/imported/enemydeath.wav-3131d424ae5dad00be947da899866e69.sample"]
 
 [params]
 

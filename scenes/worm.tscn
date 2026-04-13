@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cb1lh5kkp3r8c" path="res://scripts/worm.gd" id="1_fb06d"]
 [ext_resource type="PackedScene" uid="uid://bqyjeqjktrgya" path="res://assets/Skeleton_Minion.glb" id="2_lley5"]
-[ext_resource type="AudioStream" uid="uid://dj3xttlew3fbh" path="res://assets/sounds/enemyhoming.ogg" id="3_lley5"]
+[ext_resource type="AudioStream" uid="uid://dj3xttlew3fbh" path="res://sounds/enemyhoming.ogg" id="3_lley5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fb06d"]
 transparency = 1

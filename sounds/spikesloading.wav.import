@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://dmwn3j7lvadai"
-path="res://.godot/imported/spikesloading.wav-e1c0116450e2ecb090dbd1633e861551.sample"
+path="res://.godot/imported/spikesloading.wav-2a7d4b61d5d7b8075be8ce29871ec00d.sample"
 
 [deps]
 
-source_file="res://assets/sounds/spikesloading.wav"
-dest_files=["res://.godot/imported/spikesloading.wav-e1c0116450e2ecb090dbd1633e861551.sample"]
+source_file="res://sounds/spikesloading.wav"
+dest_files=["res://.godot/imported/spikesloading.wav-2a7d4b61d5d7b8075be8ce29871ec00d.sample"]
 
 [params]
 

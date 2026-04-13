@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://c7mcr8bvpue1d"
-path="res://.godot/imported/spikestrike.wav-79fbeb0fbb376a378179cbaf7063da87.sample"
+path="res://.godot/imported/spikestrike.wav-566c99ce95e7cd489d486dcfa51389e3.sample"
 
 [deps]
 
-source_file="res://assets/sounds/spikestrike.wav"
-dest_files=["res://.godot/imported/spikestrike.wav-79fbeb0fbb376a378179cbaf7063da87.sample"]
+source_file="res://sounds/spikestrike.wav"
+dest_files=["res://.godot/imported/spikestrike.wav-566c99ce95e7cd489d486dcfa51389e3.sample"]
 
 [params]
 

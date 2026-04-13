@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://b42lq60fg0c5"
-path="res://.godot/imported/powerup.wav-0cab05f26d6e2684539da479a436c98c.sample"
+uid="uid://cilpcqx7mgef6"
+path="res://.godot/imported/switch.wav-2d828b9ee535ce804c93e3407b702864.sample"
 
 [deps]
 
-source_file="res://assets/sounds/powerup.wav"
-dest_files=["res://.godot/imported/powerup.wav-0cab05f26d6e2684539da479a436c98c.sample"]
+source_file="res://sounds/switch.wav"
+dest_files=["res://.godot/imported/switch.wav-2d828b9ee535ce804c93e3407b702864.sample"]
 
 [params]
 

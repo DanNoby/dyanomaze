@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://bsr4knfc2d2o4" path="res://scripts/trapwall.gd" id="1_7an3x"]
 [ext_resource type="PackedScene" uid="uid://i11wiq0nvio0" path="res://assets/pillar.fbx" id="2_mko7d"]
-[ext_resource type="AudioStream" uid="uid://dmwn3j7lvadai" path="res://assets/sounds/spikesloading.wav" id="3_d5ce2"]
-[ext_resource type="AudioStream" uid="uid://c7mcr8bvpue1d" path="res://assets/sounds/spikestrike.wav" id="4_iwpgt"]
+[ext_resource type="AudioStream" uid="uid://dmwn3j7lvadai" path="res://sounds/spikesloading.wav" id="3_d5ce2"]
+[ext_resource type="AudioStream" uid="uid://c7mcr8bvpue1d" path="res://sounds/spikestrike.wav" id="4_iwpgt"]
 
 [sub_resource type="Gradient" id="Gradient_mko7d"]
 offsets = PackedFloat32Array(0.5588235, 1)

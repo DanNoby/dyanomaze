@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://7d7xgj0jtrah" path="res://scripts/finish_zone.gd" id="1_26jv3"]
 [ext_resource type="PackedScene" uid="uid://bgysuei8c1j78" path="res://assets/pillar_decorated.gltf" id="2_vnk2v"]
-[ext_resource type="AudioStream" uid="uid://cilpcqx7mgef6" path="res://assets/sounds/switch.wav" id="3_33qj3"]
+[ext_resource type="AudioStream" uid="uid://cilpcqx7mgef6" path="res://sounds/switch.wav" id="3_33qj3"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_26jv3"]
 
