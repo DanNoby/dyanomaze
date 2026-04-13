@@ -45,7 +45,7 @@ func start_trap_cycle():
 		var roll = randf()
 		if roll < 0.02:
 			spawn_worm()
-		if roll > 0.95: 
+		if roll > 0.98: 
 			spawn_powerup()
 		
 		await get_tree().create_timer(safe_time).timeout

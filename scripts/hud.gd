@@ -1,59 +1,73 @@
 extends CanvasLayer
 
 # Standard HUD variables
-@onready var message_screen = $MessageScreen
-@onready var title_label = $MessageScreen/TitleLabel
 @onready var health_label = $HealthLabel
+@onready var canvas_group = $PauseMenu/CanvasGroup
+@onready var crt_spark = $CRTSpark
 
 # Settings variables
 @onready var pause_menu = $PauseMenu
+@onready var main_menu_screen = $PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen
+@onready var logo_label = $PauseMenu/CanvasGroup/VBoxContainer/LogoLabel
+@onready var final_score_label = $PauseMenu/CanvasGroup/VBoxContainer/FinalScoreLabel
+@onready var options_screen = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen
 
-# VIDEO TAB
-@onready var fullscreen_toggle = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer/FullScreenToggle
-@onready var fov_slider = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer/FOVSlider
-@onready var shake_toggle = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer/ShakeToggle
-@onready var hud_toggle = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Video/MarginContainer/GridContainer/HUDToggle
+# MAIN MENU
+@onready var resume_btn = $PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen/ResumeButton
+@onready var options_btn = $PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen/OptionsButton
+@onready var quit_btn = $PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen/QuitButton
+@onready var back_btn = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/BackButton
 
-# AUDIO TAB
-@onready var output_dropdown = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer/OutputDropdown
-@onready var master_slider = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer/MasterSlider
-@onready var music_slider = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer/MusicSlider
-@onready var sfx_slider = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Audio/MarginContainer/GridContainer/SFXSlider
+# --- VIDEO TAB ---
+@onready var fullscreen_toggle = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Video/MarginContainer/GridContainer/FullScreenToggle
+@onready var fov_slider = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Video/MarginContainer/GridContainer/FOVSlider
+@onready var shake_toggle = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Video/MarginContainer/GridContainer/ShakeToggle
+@onready var hud_toggle = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Video/MarginContainer/GridContainer/HUDToggle
 
-# GAMEPLAY TAB
-@onready var tps_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/TPSButton
-@onready var fps_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/FPSButton
-@onready var keyboard_btn = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/KeyboardButton
-@onready var controller_btn = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/ControllerButton
-@onready var invert_toggle = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/InvertToggle
-@onready var sens_slider = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Gameplay/MarginContainer/GridContainer/SensSlider
+# --- AUDIO TAB ---
+@onready var output_dropdown = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Audio/MarginContainer/GridContainer/OutputDropdown
+@onready var master_slider = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Audio/MarginContainer/GridContainer/MasterSlider
+@onready var music_slider = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Audio/MarginContainer/GridContainer/MusicSlider
+@onready var sfx_slider = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Audio/MarginContainer/GridContainer/SFXSlider
 
-# CONTROLS TAB 
+# --- GAMEPLAY TAB ---
+@onready var tps_button = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/TPSButton
+@onready var fps_button = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/FPSButton
+@onready var keyboard_btn = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/KeyboardButton
+@onready var controller_btn = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/ControllerButton
+@onready var invert_toggle = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/InvertToggle
+@onready var sens_slider = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/SensSlider
+
+# --- CONTROLS TAB ---
 @onready var remap_overlay = $PauseMenu/RemapOverlay
-@onready var up_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer/UpButton
-@onready var down_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer/DownButton
-@onready var left_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer/LeftButton
-@onready var right_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer/RightButton
-@onready var attack_button = $PauseMenu/CanvasGroup/VBoxContainer/TabContainer/Controls/MarginContainer/GridContainer/AttackButton
-@onready var resume_button = $PauseMenu/CanvasGroup/VBoxContainer/ResumeButton
-@onready var quit_button = $PauseMenu/CanvasGroup/VBoxContainer/QuitButton
+@onready var up_button = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Controls/MarginContainer/GridContainer/UpButton
+@onready var down_button = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Controls/MarginContainer/GridContainer/DownButton
+@onready var left_button = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Controls/MarginContainer/GridContainer/LeftButton
+@onready var right_button = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Controls/MarginContainer/GridContainer/RightButton
+@onready var attack_button = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Controls/MarginContainer/GridContainer/AttackButton
 
 @onready var score_ui = $ScoreLabel
 @onready var health_ui = $HealthLabel
 
 var is_remapping: bool = false
+var is_transitioning: bool = false
 var action_to_remap: String = ""
 var button_to_update: Button = null
+var current_game_state: String = "PLAYING"
 
 func _ready():
 	# Initial Visibility
-	quit_button.pressed.connect(quit_game)
+	quit_btn.pressed.connect(quit_game)
+	options_btn.pressed.connect(_on_options_button_pressed)
+	back_btn.pressed.connect(_on_back_button_pressed)
 	hud_toggle.button_pressed = GlobalSettings.show_hud
 	if score_ui: score_ui.visible = GlobalSettings.show_hud
 	if health_ui: health_ui.visible = GlobalSettings.show_hud
-	message_screen.visible = false
 	pause_menu.visible = false
 	remap_overlay.visible = false
+	
+	main_menu_screen.show()
+	options_screen.hide()
 	
 	# Existing GameManager connections
 	update_heart_display(GameManager.current_hearts)
@@ -104,7 +118,7 @@ func _ready():
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
 	invert_toggle.toggled.connect(_on_invert_toggled)
-	resume_button.pressed.connect(resume_game)
+	resume_btn.pressed.connect(resume_game)
 	sens_slider.value_changed.connect(_on_sens_changed)
 	fov_slider.value_changed.connect(_on_fov_changed)
 	shake_toggle.toggled.connect(_on_shake_toggled)
@@ -117,7 +131,7 @@ func _ready():
 	left_button.pressed.connect(_on_remap_button_pressed.bind("ui_left", left_button))
 	right_button.pressed.connect(_on_remap_button_pressed.bind("ui_right", right_button))
 	attack_button.pressed.connect(_on_remap_button_pressed.bind("ui_accept", attack_button))
-
+	connect_all_buttons(pause_menu)
 	
 	music_slider.max_value = 1.0; music_slider.step = 0.05
 	sfx_slider.max_value = 1.0; sfx_slider.step = 0.05
@@ -164,7 +178,7 @@ func _input(event):
 		return
 
 	if event.is_action_pressed("toggle_pause"):
-		if message_screen.visible:
+		if is_transitioning or current_game_state != "PLAYING":
 			return
 			
 		if pause_menu.visible:
@@ -172,19 +186,75 @@ func _input(event):
 		else:
 			pause_game()
 
+func _process(_delta):
+	if pause_menu.visible:
+		canvas_group.queue_redraw()
+		logo_label.queue_redraw()
+
 func pause_game():
+	if current_game_state == "PLAYING":
+		logo_label.text = "[center][shake rate=20.0 level=6 connected=1]DYANOMAZE[/shake][/center]"
+		final_score_label.hide()
+		resume_btn.text = "RESUME"
+	
+	is_transitioning = true
+	get_tree().paused = true # immediately stop game
+	$SwitchAudio.play()
+
+	# Tv boot
+	crt_spark.scale = Vector2.ZERO
+	crt_spark.modulate.a = 1.0
+	crt_spark.show()
+
+	var tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	tween.tween_property(crt_spark, "scale", Vector2(1.5, 1.5), 0.04)
+	tween.tween_property(crt_spark, "scale", Vector2(15.0, 0.05), 0.05) 
+	tween.tween_property(crt_spark, "modulate:a", 0.0, 0.03) 
+
+	await tween.finished
+	crt_spark.hide()
+
+	# show UI
 	pause_menu.visible = true
-	get_tree().paused = true
+	main_menu_screen.show()
+	options_screen.hide()
+
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	$PauseMenu/CanvasGroup/VBoxContainer/ResumeButton.grab_focus()
+	$PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen/ResumeButton.grab_focus()
 	update_audio_dropdown()
 
-func resume_game():
-	pause_menu.visible = false
-	get_tree().paused = false
-	get_viewport().gui_release_focus()
+	is_transitioning = false
 
+func resume_game():
+	if is_transitioning: return 
+	
+	is_transitioning = true
+	$SwitchAudio.play()
+
+	# Hide UI
+	pause_menu.visible = false
+	get_viewport().gui_release_focus()
+	
+	# Tv gone animation
+	crt_spark.scale = Vector2(15.0, 0.05)
+	crt_spark.modulate.a = 1.0
+	crt_spark.show()
+
+	var tween = create_tween().set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
+	tween.tween_property(crt_spark, "scale", Vector2(0.5, 0.5), 0.05) 
+	tween.tween_property(crt_spark, "scale", Vector2.ZERO, 0.05)
+
+	await tween.finished
+	crt_spark.hide()
+
+	# unpause game
+	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	is_transitioning = false
+	
+	if current_game_state == "DEAD" or current_game_state == "WON":
+		current_game_state = "PLAYING" 
+		GameManager.start_game(GameManager.current_difficulty)
 
 # Settings logic
 func _on_master_changed(value: float):
@@ -268,7 +338,6 @@ func _on_hud_toggled(toggled_on: bool):
 	GlobalSettings.show_hud = toggled_on
 	GlobalSettings.save_settings()
 
-	# Hide/Show just these specific pieces in real-time
 	if score_ui: score_ui.visible = toggled_on
 	if health_ui: health_ui.visible = toggled_on
 
@@ -283,8 +352,7 @@ func _on_output_selected(index: int):
 func update_audio_dropdown():
 	output_dropdown.clear()
 	var devices = AudioServer.get_output_device_list()
-
-	# Mac Failsafe: If the OS hides the list and returns nothing, force a "Default" option
+	
 	if devices.is_empty():
 		devices.append("Default")
 
@@ -294,6 +362,14 @@ func update_audio_dropdown():
 		# Re-select the player's saved preference
 		if devices[i] == GlobalSettings.audio_device:
 			output_dropdown.select(i)
+			
+func _on_options_button_pressed():
+	main_menu_screen.hide()
+	options_screen.show()
+
+func _on_back_button_pressed():
+	options_screen.hide()
+	main_menu_screen.show()
 	
 func update_heart_display(amount):
 	var txt = " HP "
@@ -302,22 +378,39 @@ func update_heart_display(amount):
 	health_label.text = txt
 
 func show_game_over():
-	title_label.text = "YOU DIED"
-	title_label.modulate = Color(1, 0, 0)
-	message_screen.visible = true
-	get_tree().paused = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE 
+	current_game_state = "DEAD"
+
+	logo_label.text = "[center][color=red][shake rate=20.0 level=6 connected=1]YOU DIED[/shake][/color][/center]"
+
+	final_score_label.text = "FINAL " + score_ui.text
+	final_score_label.show()
+	
+	resume_btn.text = "RESTART"
+
+	pause_game() 
 
 func show_win():
-	title_label.text = "VICTORY!"
-	title_label.modulate = Color(0, 1, 0)
-	message_screen.visible = true
-	get_tree().paused = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE 
+	current_game_state = "WON"
 
-func _on_restart_button_pressed():
-	get_tree().paused = false
-	GameManager.start_game(GameManager.current_difficulty)
+	logo_label.text = "[center][color=green][shake rate=20.0 level=6 connected=1]VICTORY![/shake][/color][/center]"
+	
+	final_score_label.text = "FINAL " + score_ui.text
+	final_score_label.show()
+	
+	resume_btn.text = "RESTART"
+	
+	pause_game()
+	
+func play_button_sound(): 
+	$SwitchAudio.play()
+
+func connect_all_buttons(node: Node):
+	for child in node.get_children():
+		if child is BaseButton: 
+			if not child.pressed.is_connected(play_button_sound):
+				child.pressed.connect(play_button_sound)
+		
+		connect_all_buttons(child)
 	
 func quit_game():
 	get_tree().quit()

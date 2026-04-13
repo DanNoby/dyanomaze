@@ -5,7 +5,7 @@ uniform float glitch_speed = 0.08;
 uniform float glitch_size = 0.01;
 
 // The Slicer Controls
-uniform float letter_count = 5.0; // Change this to match your title!
+uniform float letter_count = 5.0;
 uniform float spread_amount : hint_range(0.0, 0.1) = 0.02;
 
 void fragment() {

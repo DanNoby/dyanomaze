@@ -13,6 +13,5 @@ void fragment() {
 	float g = texture(screen_texture, SCREEN_UV).g;
 	float b = texture(screen_texture, SCREEN_UV + shift).b;
 	float a = texture(screen_texture, SCREEN_UV).a;
-	
 	COLOR = vec4(r * brightness_multiplier, g * brightness_multiplier, b * brightness_multiplier, a);
 }
