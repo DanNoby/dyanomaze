@@ -40,16 +40,18 @@ func load_tiles_from_folder():
 	if dir:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
-		
+
 		while file_name != "":
 			if !dir.current_is_dir() and !file_name.begins_with("."):
-				if file_name.ends_with(".glb") or file_name.ends_with(".tscn"):
-					var full_path = tiles_folder + "/" + file_name
+				var clean_name = file_name.trim_suffix(".remap").trim_suffix(".import")
+				
+				if clean_name.ends_with(".glb") or clean_name.ends_with(".tscn"):
+					# Use the cleaned name to build the path
+					var full_path = tiles_folder + "/" + clean_name
 					var tile_scene = load(full_path)
-					
+
 					if tile_scene:
-						available_tiles.append(tile_scene)
-			
+						available_tiles.append(tile_scene)    
 			file_name = dir.get_next()
 		
 		dir.list_dir_end()

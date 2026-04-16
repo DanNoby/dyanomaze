@@ -114,11 +114,11 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 107.0
-offset_right = 107.0
+offset_left = 40.0
+offset_right = 40.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(1.25, 1.25)
+scale = Vector2(0.8, 0.8)
 color = Color(0, 0, 0, 1)
 
 [node name="CRTBackground" type="ColorRect" parent="PauseMenu"]
@@ -149,9 +149,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -595.0
+offset_left = -623.5
 offset_top = -439.99997
-offset_right = -172.0
+offset_right = -143.5
 offset_bottom = -163.99997
 grow_horizontal = 2
 grow_vertical = 2
