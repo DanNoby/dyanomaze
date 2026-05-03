@@ -9,7 +9,7 @@
 emission_enabled = true
 rim_enabled = true
 
-[node name="PowerUp" type="Area3D"]
+[node name="PowerUp" type="Area3D" groups=["destructibles"]]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 script = ExtResource("1_ih772")
 

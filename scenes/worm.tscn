@@ -13,7 +13,7 @@ rim_enabled = true
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_ttset"]
 
-[node name="Worm" type="Area3D" groups=["enemy"]]
+[node name="Worm" type="Area3D" groups=["destructibles", "enemy"]]
 script = ExtResource("1_fb06d")
 
 [node name="Skeleton_Minion" parent="." instance=ExtResource("2_lley5")]

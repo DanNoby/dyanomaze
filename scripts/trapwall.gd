@@ -17,7 +17,7 @@ var current_state = SAFE
 var material: StandardMaterial3D 
 
 func _ready():
-	position.y = -3.0 
+	position.y = -2.0 
 	
 	material = mesh.get_active_material(0).duplicate()
 	mesh.set_surface_override_material(0, material)
@@ -30,6 +30,13 @@ func set_glow_color(weight: float):
 
 func initialize(assigned_delay):
 	start_delay = assigned_delay
+	await get_tree().process_frame
+	var roll = randf()
+	if roll < 0.10: 
+		spawn_worm()
+	elif roll > 0.95: 
+		spawn_powerup()
+	
 	await get_tree().create_timer(start_delay).timeout
 	start_trap_cycle()
 
@@ -42,19 +49,13 @@ func start_trap_cycle():
 		tween.tween_property(material, "emission_energy_multiplier", 1, 0.2)
 		tween.tween_method(set_glow_color, 1.0, 0.0, 0.5)
 		
-		var roll = randf()
-		if roll < 0.02:
-			spawn_worm()
-		if roll > 0.98: 
-			spawn_powerup()
-		
 		await get_tree().create_timer(safe_time).timeout
 		
 		# --- WARNING PHASE ---
 		current_state = WARNING
 		tween = create_tween()
 		tween.set_parallel(true) 
-		tween.tween_property(self, "position:y", -1.8, 0.2) 
+		tween.tween_property(self, "position:y", -1.5, 0.2) 
 		tween.tween_property(material, "emission_energy_multiplier", 4.0, warning_time)
 
 		tween.tween_method(set_glow_color, 0.0, 1.0, 0.2)
@@ -66,7 +67,7 @@ func start_trap_cycle():
 		current_state = DEADLY
 		tween = create_tween()
 		tween.set_parallel(true)
-		tween.tween_property(self, "position:y", 0.0, 0.1) 
+		tween.tween_property(self, "position:y", 0.5, 0.1) 
 
 		# THE FIX: Fade from RED (1.0) back to GREEN (0.0) over the duration it stays up
 		tween.tween_method(set_glow_color, 1.0, 0.0, deadly_time)
@@ -81,7 +82,7 @@ func spawn_worm():
 		return
 	var worm = worm_scene.instantiate()
 	get_tree().current_scene.add_child(worm)
-	worm.global_position = Vector3(global_position.x, 0.5, global_position.z)
+	worm.global_position = Vector3(global_position.x, 1.5, global_position.z)
 
 func spawn_powerup():
 	if get_tree().paused:

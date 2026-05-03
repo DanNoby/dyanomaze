@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-const SPEED = 5.0
+const SPEED = 5
 
 var is_fps_mode = false
 var is_invincible = false
@@ -24,6 +24,8 @@ var shake_duration: float = 0.0
 var tps_sword_pos = Vector3.ZERO 
 
 func _ready():
+	GameManager.current_hearts = GameManager.max_hearts
+	GameManager.emit_signal("health_changed", GameManager.current_hearts)
 	tps_sword_pos = sword_container.position
 	update_camera_mode()
 	set_view_mode(GlobalSettings.prefer_fps)
