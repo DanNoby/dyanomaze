@@ -195,6 +195,7 @@ func pause_game():
 	if current_game_state == "PLAYING":
 		logo_label.text = "[center][shake rate=20.0 level=6 connected=1]DYANOMAZE[/shake][/center]"
 		final_score_label.hide()
+		resume_btn.show()
 		resume_btn.text = "RESUME"
 	
 	is_transitioning = true
@@ -251,10 +252,6 @@ func resume_game():
 	get_tree().paused = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	is_transitioning = false
-	
-	if current_game_state == "DEAD" or current_game_state == "WON":
-		current_game_state = "PLAYING" 
-		GameManager.start_game(GameManager.current_difficulty)
 
 # Settings logic
 func _on_master_changed(value: float):
@@ -385,7 +382,7 @@ func show_game_over():
 	final_score_label.text = "FINAL " + score_ui.text
 	final_score_label.show()
 	
-	resume_btn.text = "RESTART"
+	resume_btn.hide()
 
 	pause_game() 
 
@@ -397,7 +394,7 @@ func show_win():
 	final_score_label.text = "FINAL " + score_ui.text
 	final_score_label.show()
 	
-	resume_btn.text = "RESTART"
+	resume_btn.hide()
 	
 	pause_game()
 	
@@ -414,3 +411,7 @@ func connect_all_buttons(node: Node):
 	
 func quit_game():
 	get_tree().quit()
+
+func _on_restart_button_pressed():
+	get_tree().paused = false
+	get_tree().reload_current_scene()

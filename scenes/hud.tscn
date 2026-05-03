@@ -192,6 +192,11 @@ layout_mode = 2
 size_flags_vertical = 4
 text = "RESUME GAME"
 
+[node name="RestartButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "RESTART"
+
 [node name="OptionsButton" type="Button" parent="PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen"]
 layout_mode = 2
 text = "OPTIONS MENU"
@@ -554,3 +559,5 @@ mouse_filter = 2
 stream = ExtResource("12_apjy4")
 volume_db = 10.0
 max_polyphony = 5
+
+[connection signal="pressed" from="PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen/RestartButton" to="." method="_on_restart_button_pressed"]
