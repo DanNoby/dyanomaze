@@ -18,7 +18,7 @@ size = Vector3(1.8, 2, 1.8)
 [sub_resource type="PrismMesh" id="PrismMesh_7an3x"]
 size = Vector3(1.5, 0.8, 1.5)
 
-[node name="Trapwall" type="StaticBody3D"]
+[node name="Trapwall" type="StaticBody3D" groups=["destructibles"]]
 script = ExtResource("1_7an3x")
 glow_gradient = SubResource("Gradient_mko7d")
 

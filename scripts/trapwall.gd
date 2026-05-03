@@ -77,11 +77,15 @@ func start_trap_cycle():
 		await get_tree().create_timer(deadly_time).timeout
 		
 func spawn_worm():
+	if get_tree().paused:
+		return
 	var worm = worm_scene.instantiate()
 	get_tree().current_scene.add_child(worm)
 	worm.global_position = Vector3(global_position.x, 0.5, global_position.z)
 
 func spawn_powerup():
+	if get_tree().paused:
+		return
 	var powerup = powerup_scene.instantiate()
 	get_tree().current_scene.add_child(powerup)
 	powerup.global_position = Vector3(global_position.x, 2, global_position.z)
