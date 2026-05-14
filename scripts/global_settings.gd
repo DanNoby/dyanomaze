@@ -4,6 +4,7 @@ var save_path = "user://settings.cfg"
 var config = ConfigFile.new()
 var use_controller: bool = false
 var show_hud: bool = true
+var best_score: int = 0
 var audio_device: String = "Default"
 
 var master_vol: float = 1.0
@@ -43,6 +44,8 @@ func save_settings():
 	config.set_value("Controls", "invert_y", invert_y)
 	config.set_value("Controls", "keybinds", keybinds)
 	config.set_value("Controls", "use_controller", use_controller)
+	
+	config.set_value("Score", "best_score", best_score)
 	config.save(save_path)
 
 func load_settings():
@@ -51,7 +54,8 @@ func load_settings():
 		apply_settings()
 		apply_keybinds()
 		return
-	
+		
+	best_score = config.get_value("Score", "best_score", 0)
 	master_vol = config.get_value("Audio", "master", 1.0)
 	music_vol = config.get_value("Audio", "music", 1.0)
 	sfx_vol = config.get_value("Audio", "sfx", 1.0)

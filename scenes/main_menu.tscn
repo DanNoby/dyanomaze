@@ -1,0 +1,98 @@
+[gd_scene load_steps=9 format=3 uid="uid://d36g0cf85b650"]
+
+[ext_resource type="PackedScene" uid="uid://gbtcxvrrd3e3" path="res://scenes/hud.tscn" id="1_l6cm7"]
+[ext_resource type="Script" uid="uid://cwfahs38cxq6y" path="res://scripts/main_menu.gd" id="2_ekxnf"]
+[ext_resource type="Texture2D" uid="uid://b3mwupxbc0di7" path="res://assets/maintexture.jpeg" id="3_bqqt6"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_ekxnf"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_bqqt6"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_wu84c"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_8ln24"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ekxnf"]
+font_size = 360
+
+[node name="MainMenu" instance=ExtResource("1_l6cm7")]
+script = ExtResource("2_ekxnf")
+
+[node name="TextureRect" type="TextureRect" parent="." index="0"]
+modulate = Color(1, 1, 1, 0.47058824)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_bqqt6")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CRTBackground" parent="PauseMenu" index="0"]
+visible = false
+
+[node name="ResumeButton" parent="PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen" index="0"]
+text = "PLAY"
+
+[node name="RestartButton" parent="PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen" index="1"]
+visible = false
+
+[node name="QuitButton" parent="PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen" index="3"]
+text = "Quit Game"
+
+[node name="TPSButton" parent="PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer" index="0"]
+button_group = SubResource("ButtonGroup_ekxnf")
+
+[node name="FPSButton" parent="PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer" index="1"]
+button_group = SubResource("ButtonGroup_bqqt6")
+
+[node name="KeyboardButton" parent="PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer" index="2"]
+button_group = SubResource("ButtonGroup_wu84c")
+
+[node name="ControllerButton" parent="PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer" index="3"]
+button_group = SubResource("ButtonGroup_8ln24")
+
+[node name="TVBezel" parent="PauseMenu" index="2"]
+visible = false
+
+[node name="HealthLabel" parent="." index="3"]
+visible = false
+
+[node name="ScoreLabel" parent="." index="4"]
+visible = false
+
+[node name="DustOverlay" parent="." index="5"]
+visible = false
+
+[node name="SwitchAudio" parent="." index="6"]
+visible = false
+
+[node name="CountdownOverlay2" type="ColorRect" parent="." index="7"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0, 0, 0, 0.5882353)
+
+[node name="CountdownLabel" type="Label" parent="CountdownOverlay2" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "3"
+label_settings = SubResource("LabelSettings_ekxnf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen/ResumeButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/BackButton" to="." method="_on_back_button_pressed"]

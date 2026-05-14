@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="dyanoMaze"
-run/main_scene="uid://bwjgd7tgjtkpa"
+run/main_scene="uid://d36g0cf85b650"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
 

@@ -4,12 +4,14 @@ extends CanvasLayer
 @onready var health_label = $HealthLabel
 @onready var canvas_group = $PauseMenu/CanvasGroup
 @onready var crt_spark = $CRTSpark
+@onready var countdown_overlay = $CountdownOverlay
+@onready var countdown_label = $CountdownOverlay/CountdownLabel
 
 # Settings variables
 @onready var pause_menu = $PauseMenu
 @onready var main_menu_screen = $PauseMenu/CanvasGroup/VBoxContainer/MainMenuScreen
 @onready var logo_label = $PauseMenu/CanvasGroup/VBoxContainer/LogoLabel
-@onready var final_score_label = $PauseMenu/CanvasGroup/VBoxContainer/FinalScoreLabel
+@onready var final_score_label = $PauseMenu/CanvasGroup/VBoxContainer/HighScoreLabel
 @onready var options_screen = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen
 
 # MAIN MENU
@@ -56,6 +58,8 @@ var button_to_update: Button = null
 var current_game_state: String = "PLAYING"
 
 func _ready():
+	current_game_state = "COUNTDOWN"
+	
 	# Initial Visibility
 	quit_btn.pressed.connect(quit_game)
 	options_btn.pressed.connect(_on_options_button_pressed)
@@ -137,7 +141,9 @@ func _ready():
 	sfx_slider.max_value = 1.0; sfx_slider.step = 0.05
 	music_slider.value = GlobalSettings.music_vol
 	sfx_slider.value = GlobalSettings.sfx_vol
-
+	
+	get_tree().paused = true
+	start_countdown()
 # Pause menu logic
 func _input(event):
 	if is_remapping:
@@ -190,6 +196,23 @@ func _process(_delta):
 	if pause_menu.visible:
 		canvas_group.queue_redraw()
 		logo_label.queue_redraw()
+		
+func start_countdown():
+	countdown_overlay.show()
+	
+	for i in range(3, 0, -1):
+		countdown_label.text = str(i)
+		await get_tree().create_timer(1.0, true, false, true).timeout
+		
+	countdown_label.text = "GO!"
+	await get_tree().create_timer(0.5, true, false, true).timeout
+	
+	# Hide the countdown and UNFREEZE THE GAME!
+	countdown_overlay.hide()
+	get_tree().paused = false
+	
+	current_game_state = "PLAYING"
+	get_tree().call_group("destructibles", "toggle_audio_pause", false)
 
 func pause_game():
 	if current_game_state == "PLAYING":
@@ -200,6 +223,7 @@ func pause_game():
 	
 	is_transitioning = true
 	get_tree().paused = true # immediately stop game
+	get_tree().call_group("destructibles", "toggle_audio_pause", true)
 	$SwitchAudio.play()
 
 	# Tv boot
@@ -250,6 +274,7 @@ func resume_game():
 
 	# unpause game
 	get_tree().paused = false
+	get_tree().call_group("destructibles", "toggle_audio_pause", false)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	is_transitioning = false
 
@@ -376,7 +401,11 @@ func update_heart_display(amount):
 
 func show_game_over():
 	current_game_state = "DEAD"
-
+	var current_score = int(score_ui.text)
+	if current_score > GlobalSettings.best_score:
+		GlobalSettings.best_score = current_score
+		GlobalSettings.save_settings()
+	
 	logo_label.text = "[center][color=red][shake rate=20.0 level=6 connected=1]YOU DIED[/shake][/color][/center]"
 
 	final_score_label.text = "FINAL " + score_ui.text
@@ -399,7 +428,8 @@ func show_win():
 	pause_game()
 	
 func play_button_sound(): 
-	$SwitchAudio.play()
+	if is_inside_tree() and $SwitchAudio != null:
+		$SwitchAudio.play()
 
 func connect_all_buttons(node: Node):
 	for child in node.get_children():
@@ -410,7 +440,9 @@ func connect_all_buttons(node: Node):
 		connect_all_buttons(child)
 	
 func quit_game():
-	get_tree().quit()
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	
 
 func _on_restart_button_pressed():
 	get_tree().paused = false

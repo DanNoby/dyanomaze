@@ -37,7 +37,7 @@ func initialize(assigned_delay):
 	elif roll > 0.95: 
 		spawn_powerup()
 	
-	await get_tree().create_timer(start_delay).timeout
+	await get_tree().create_timer(start_delay, false).timeout
 	start_trap_cycle()
 
 func start_trap_cycle():
@@ -49,7 +49,7 @@ func start_trap_cycle():
 		tween.tween_property(material, "emission_energy_multiplier", 1, 0.2)
 		tween.tween_method(set_glow_color, 1.0, 0.0, 0.5)
 		
-		await get_tree().create_timer(safe_time).timeout
+		await get_tree().create_timer(safe_time, false).timeout
 		
 		# --- WARNING PHASE ---
 		current_state = WARNING
@@ -61,7 +61,7 @@ func start_trap_cycle():
 		tween.tween_method(set_glow_color, 0.0, 1.0, 0.2)
 		$AudioWarning.play()
 
-		await get_tree().create_timer(warning_time).timeout
+		await get_tree().create_timer(warning_time, false).timeout
 		
 		# --- DEADLY PHASE ---
 		current_state = DEADLY
@@ -75,7 +75,7 @@ func start_trap_cycle():
 			
 		check_for_player_kill()
 
-		await get_tree().create_timer(deadly_time).timeout
+		await get_tree().create_timer(deadly_time, false).timeout
 		
 func spawn_worm():
 	if get_tree().paused:
@@ -101,3 +101,10 @@ func _on_area_3d_body_entered(body):
 	if current_state == DEADLY:
 		if body.has_method("hit"):
 			body.hit()
+
+func toggle_audio_pause(freeze: bool):
+	# The 'if has_node' check prevents crashes just in case the node is being deleted
+	if has_node("AudioWarning"):
+		$AudioWarning.stream_paused = freeze
+	if has_node("AudioStrike"):
+		$AudioStrike.stream_paused = freeze
