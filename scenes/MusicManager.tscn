@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://2thb1f00bqp5"]
 
 [ext_resource type="Script" uid="uid://cxxxpgy03tcx" path="res://scripts/music_manager.gd" id="1_ppk7c"]
-[ext_resource type="AudioStream" uid="uid://dlmwq3jjvvtsm" path="res://assets/menu.mp3" id="2_i3r22"]
-[ext_resource type="AudioStream" uid="uid://c2774nt6kx1pu" path="res://assets/game.ogg" id="3_wh65u"]
+[ext_resource type="AudioStream" uid="uid://dlmwq3jjvvtsm" path="res://sounds/menu.mp3" id="2_i3r22"]
+[ext_resource type="AudioStream" uid="uid://c2774nt6kx1pu" path="res://sounds/game.ogg" id="3_wh65u"]
 
 [node name="MusicManager" type="Node"]
 process_mode = 3
@@ -14,4 +14,5 @@ bus = &"Music"
 
 [node name="GameMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_wh65u")
+volume_db = 5.0
 bus = &"Music"

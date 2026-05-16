@@ -408,19 +408,20 @@ func update_heart_display(amount):
 
 func show_game_over():
 	current_game_state = "DEAD"
-	var current_score = int(score_ui.text)
-	if current_score > GlobalSettings.best_score:
-		GlobalSettings.best_score = current_score
+	var final_score = score_ui.current_score 
+	
+	if final_score > GlobalSettings.best_score:
+		GlobalSettings.best_score = final_score
 		GlobalSettings.save_settings()
 	
 	logo_label.text = "[center][color=red][shake rate=20.0 level=6 connected=1]YOU DIED[/shake][/color][/center]"
 
-	final_score_label.text = "FINAL " + score_ui.text
+	final_score_label.text = "FINAL SCORE: " + str(final_score)
 	final_score_label.show()
 	
 	resume_btn.hide()
 
-	pause_game() 
+	pause_game()
 
 func show_win():
 	current_game_state = "WON"
