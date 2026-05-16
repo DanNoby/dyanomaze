@@ -142,6 +142,10 @@ func _ready():
 	music_slider.value = GlobalSettings.music_vol
 	sfx_slider.value = GlobalSettings.sfx_vol
 	
+	if OS.has_feature("web_android") or OS.has_feature("web_ios") or DisplayServer.is_touchscreen_available():
+		var mobile_ui = preload("res://scenes/MobileControls.tscn").instantiate()
+		add_child(mobile_ui)
+	
 	get_tree().paused = true
 	start_countdown()
 # Pause menu logic
@@ -213,6 +217,7 @@ func start_countdown():
 	
 	current_game_state = "PLAYING"
 	get_tree().call_group("destructibles", "toggle_audio_pause", false)
+	MusicManager.play_game_music()
 
 func pause_game():
 	if current_game_state == "PLAYING":
@@ -225,6 +230,7 @@ func pause_game():
 	get_tree().paused = true # immediately stop game
 	get_tree().call_group("destructibles", "toggle_audio_pause", true)
 	$SwitchAudio.play()
+	MusicManager.pause_game_music()
 
 	# Tv boot
 	crt_spark.scale = Vector2.ZERO
@@ -255,6 +261,7 @@ func resume_game():
 	
 	is_transitioning = true
 	$SwitchAudio.play()
+	MusicManager.play_game_music()
 
 	# Hide UI
 	pause_menu.visible = false

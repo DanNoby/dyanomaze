@@ -9,7 +9,6 @@ extends CanvasLayer
 @onready var back_btn = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/BackButton
 @onready var output_dropdown = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Audio/MarginContainer/GridContainer/OutputDropdown
 
-# --- OPTIONS UI ELEMENTS ---
 @onready var fullscreen_toggle = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Video/MarginContainer/GridContainer/FullScreenToggle
 @onready var fov_slider = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Video/MarginContainer/GridContainer/FOVSlider
 @onready var master_slider = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Audio/MarginContainer/GridContainer/MasterSlider
@@ -17,7 +16,16 @@ extends CanvasLayer
 @onready var sfx_slider = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Audio/MarginContainer/GridContainer/SFXSlider
 @onready var sens_slider = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/SensSlider
 
+@onready var tps_button = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/TPSButton
+@onready var fps_button = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/FPSButton
+@onready var keyboard_btn = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/KeyboardButton
+@onready var controller_btn = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/ControllerButton
+@onready var invert_toggle = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Gameplay/MarginContainer/GridContainer/InvertToggle
+@onready var shake_toggle = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Video/MarginContainer/GridContainer/ShakeToggle
+@onready var hud_toggle = $PauseMenu/CanvasGroup/VBoxContainer/OptionsScreen/TabContainer/Video/MarginContainer/GridContainer/HUDToggle
+
 func _ready():
+	MusicManager.play_menu_music()
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	high_score_label.show() 
 	high_score_label.text = "BEST SCORE: " + str(GlobalSettings.best_score)
@@ -45,6 +53,22 @@ func _ready():
 	music_slider.value_changed.connect(_on_music_changed)
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	sens_slider.value_changed.connect(_on_sens_changed)
+	
+	fps_button.button_pressed = GlobalSettings.prefer_fps
+	tps_button.button_pressed = not GlobalSettings.prefer_fps
+	controller_btn.button_pressed = GlobalSettings.use_controller
+	keyboard_btn.button_pressed = not GlobalSettings.use_controller
+	invert_toggle.button_pressed = GlobalSettings.invert_y
+	shake_toggle.button_pressed = GlobalSettings.screen_shake
+	hud_toggle.button_pressed = GlobalSettings.show_hud
+
+	fps_button.toggled.connect(_on_fps_toggled)
+	tps_button.toggled.connect(_on_tps_toggled)
+	keyboard_btn.toggled.connect(_on_keyboard_toggled)
+	controller_btn.toggled.connect(_on_controller_toggled)
+	invert_toggle.toggled.connect(_on_invert_toggled)
+	shake_toggle.toggled.connect(_on_shake_toggled)
+	hud_toggle.toggled.connect(_on_hud_toggled)
 	
 	if play_btn: play_btn.grab_focus()
 
@@ -114,4 +138,35 @@ func _on_output_selected(index: int):
 	GlobalSettings.audio_device = selected_device
 	GlobalSettings.save_settings()
 	GlobalSettings.apply_settings()
-	
+
+func _on_fps_toggled(toggled_on: bool):
+	if toggled_on:
+		GlobalSettings.prefer_fps = true
+		GlobalSettings.save_settings()
+
+func _on_tps_toggled(toggled_on: bool):
+	if toggled_on:
+		GlobalSettings.prefer_fps = false
+		GlobalSettings.save_settings()
+
+func _on_keyboard_toggled(toggled_on: bool):
+	if toggled_on:
+		GlobalSettings.use_controller = false
+		GlobalSettings.save_settings()
+
+func _on_controller_toggled(toggled_on: bool):
+	if toggled_on:
+		GlobalSettings.use_controller = true
+		GlobalSettings.save_settings()
+
+func _on_invert_toggled(toggled_on: bool):
+	GlobalSettings.invert_y = toggled_on
+	GlobalSettings.save_settings()
+
+func _on_shake_toggled(toggled_on: bool):
+	GlobalSettings.screen_shake = toggled_on
+	GlobalSettings.save_settings()
+
+func _on_hud_toggled(toggled_on: bool):
+	GlobalSettings.show_hud = toggled_on
+	GlobalSettings.save_settings()

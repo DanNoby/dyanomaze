@@ -23,6 +23,7 @@ buses/default_bus_layout="res://sounds/default_bus_layout.tres"
 
 GameManager="*res://scripts/GameManager.gd"
 GlobalSettings="*res://scripts/global_settings.gd"
+MusicManager="*res://scenes/MusicManager.tscn"
 
 [display]
 
